@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q'RICO - Registro</title>
+    <!-- Inclusión de la biblioteca de iconos Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Estilos y scripts de Bootstrap para diseño y funcionalidad -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Enlace al archivo de estilos CSS personalizado -->
+    <link rel="stylesheet" href="registro.css">
+    <style>
+        /* Estilos para el botón del modal con efecto hover */
+        .btn-hover:hover {
+            background-color: #ff8f46;
+        }
+    </style>
+</head>
+<body>
+    <!-- SECCION REGISTRO -->
+    <section id="registro">
+        <!-- Encabezado con el logo -->
+        <header>
+            <div class="contenido-header">
+                <!-- Enlace al index a través del logo -->
+                <a href="index.html" class="logo" id="logo">
+                    <h1>Q'RICO</h1>
+                </a>
+            </div>
+        </header>
+        <!-- Formulario de registro -->
+        <div class="formulario">
+            <!-- Título del formulario -->
+            <h2>Registro</h2>
+            <!-- Formulario con campos de registro -->
+            <form id="form-registro">
+                <!-- Campo para el nombre -->
+                <div class="campo">
+                    <!-- Icono de usuario -->
+                    <i class="fa-solid fa-user"></i>
+                    <!-- Input para el nombre -->
+                    <input type="text" id="nombre" name="nombre" placeholder="Nombre Completo" required>
+                </div>
+
+                <!-- Campo para el número de teléfono -->
+                <div class="campo">
+                    <!-- Icono de teléfono -->
+                    <i class="fa-solid fa-phone"></i>
+                    <!-- Input para el número de teléfono -->
+                    <input type="tel" id="telefono" name="telefono" placeholder="Número de Teléfono" required>
+                </div>
+
+                <!-- Campo para el correo electrónico -->
+                <div class="campo">
+                    <!-- Icono de correo -->
+                    <i class="fa-solid fa-envelope"></i>
+                    <!-- Input para el correo electrónico -->
+                    <input type="email" id="email" name="email" placeholder="Correo electrónico" required>
+                </div>
+
+                <!-- Campo para el Confirmar correo electrónico -->
+                <div class="campo">
+                    <!-- Icono de correo -->
+                    <i class="fa-solid fa-envelope"></i>
+                    <!-- Input para el correo electrónico -->
+                    <input type="email" id="confirmarEmail" name="confirmarEmail" placeholder="Confirmar Correo electrónico" required>
+                </div>
+
+                <!-- Campo para la contraseña -->
+                <div class="campo">
+                    <!-- Icono de candado -->
+                    <i class="fa-solid fa-lock"></i>
+                    <!-- Input para la contraseña -->
+                    <input type="password" id="password" name="password" placeholder="Contraseña" required>
+                </div>
+
+                <!-- Campo para la Confirmar contraseña -->
+                <div class="campo">
+                    <!-- Icono de candado -->
+                    <i class="fa-solid fa-lock"></i>
+                    <!-- Input para la contraseña -->
+                    <input type="password" id="confirmarPassword" name="confirmarPassword" placeholder="Confirmar Contraseña" required>
+                </div>
+
+                <!-- Botón para enviar el formulario -->
+                <button type="submit">Registrarse</button>
+            </form>
+            <!-- Párrafo para mostrar mensajes de error o información -->
+            <p id="mensaje"></p>
+            <!-- Opción para iniciar sesión -->
+            <div class="opciones">
+                <a href="login.html">¿Ya tienes una cuenta? Inicia sesión aquí</a>
+            </div>
+        </div>
+    </section>
+    <!-- Modal de registro exitoso -->
+    <div class="modal fade" id="registroExitosoModal" tabindex="-1" aria-labelledby="registroExitosoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registroExitosoModalLabel">Registro Exitoso</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ¡Felicidades! Tu registro ha sido exitoso.
+                </div>
+                <div class="modal-footer">
+                    <!-- Modifica el botón para agregar la clase de efecto hover -->
+                    <button type="button" class="btn btn-secondary btn-hover" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Script para manejar la lógica del formulario -->
+    <script src="registro-script.js"></script>
+</body>
+</html>

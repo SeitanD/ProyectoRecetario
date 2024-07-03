@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q'RICO - Contacto</title>
+    <!-- Inclusión de la biblioteca de iconos Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Enlace al archivo de estilos CSS personalizado -->
+    <link rel="stylesheet" href="contacto-estilo.css">
+</head>
+<body>
+    <!-- SECCION CONTACTO -->
+    <section id="contacto">
+        <!-- Encabezado con el logo -->
+        <header>
+            <div class="contenido-header">
+                <!-- Enlace al index a través del logo -->
+                <a href="index.html" class="logo" id="logo">
+                    <h1>Q'RICO</h1>
+                </a>
+            </div>
+        </header>
+        <!-- Formulario de contacto -->
+        <div class="formulario">
+            <!-- Título del formulario -->
+            <h2>Contacto</h2>
+            <!-- Formulario con campos de contacto -->
+            <form id="form-contacto">
+                <!-- Campo para el nombre -->
+                <div class="campo">
+                    <!-- Icono de usuario -->
+                    <i class="fa-solid fa-user"></i>
+                    <!-- Input para el nombre -->
+                    <input type="text" id="nombre" name="nombre" placeholder="Nombre" required>
+                </div>
+                <!-- Campo para el correo electrónico -->
+                <div class="campo">
+                    <!-- Icono de correo -->
+                    <i class="fa-solid fa-envelope"></i>
+                    <!-- Input para el correo electrónico -->
+                    <input type="email" id="email" name="email" placeholder="Correo electrónico" required>
+                </div>
+                <!-- Campo para el teléfono -->
+                <div class="campo">
+                    <!-- Icono de teléfono -->
+                    <i class="fa-solid fa-phone"></i>
+                    <!-- Input para el teléfono -->
+                    <input type="tel" id="telefono" name="telefono" placeholder="Teléfono" required>
+                </div>
+                <!-- Campo para el asunto -->
+                <div class="campo">
+                    <!-- Icono de asunto -->
+                    <i class="fa-solid fa-tag"></i>
+                    <!-- Input para el asunto -->
+                    <input type="text" id="asunto" name="asunto" placeholder="Asunto" required>
+                </div>
+                <!-- Campo para el mensaje -->
+                <div class="campo">
+                    <!-- Icono de mensaje -->
+                    <i class="fa-solid fa-comments"></i>
+                    <!-- Textarea para el mensaje -->
+                    <textarea id="mensaje" name="mensaje" rows="4" placeholder="Mensaje" required></textarea>
+                </div>
+                <!-- Botón para enviar el formulario -->
+                <button type="submit">Enviar mensaje</button>
+            </form>
+            <!-- Párrafo para mostrar mensajes de error o información -->
+            <p id="respuesta"></p>
+        </div>
+    </section>
+
+    <!-- Modal de confirmación -->
+    <div id="modal-confirmacion" class="modal">
+        <div class="modal-contenido">
+            <p>Mensaje enviado con éxito</p>
+            <button id="cerrar-modal">Aceptar</button>
+        </div>
+    </div>
+
+    <!-- Script para manejar la lógica del formulario -->
+    <script src="contacto-script.js"></script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load static %}
+    <!-- Definición del conjunto de caracteres -->
+    <meta charset="UTF-8">
+    
+    <!-- Configuraciones para compatibilidad con navegadores antiguos -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <!-- Configuración para el tamaño y escalabilidad del sitio en dispositivos móviles -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Título de la página -->
+    <title>Q'RICO</title>
+    
+    <!-- Enlace a la biblioteca Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <!-- Estilos de la biblioteca Flickity para el carrusel -->
+    <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
+    
+    <!-- Estilos y scripts de Bootstrap para diseño y funcionalidad -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Estilos personalizados del sitio -->
+    <link rel="stylesheet" href="{% static 'cuentas/css/estilo.css' %}">
+    
+    <!-- Incluir la biblioteca jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha384-KyZXEAg3QhqLMpG8r+Knujsl5+5hb7O2l7e/Dc3V/J4G/ZR5gE5ydz7FAW8cfQ/9" crossorigin="anonymous"></script>
+</head>
+<body>
+<!-- Sección principal de la página -->
+<section id="inicio">
+    <!-- Cabecera del sitio -->
+    <header>
+        <div class="contenido-header">
+            <div class="logo">
+                <h1>Q'RICO</h1>
+            </div>
+            <nav id="nav">
+                <ul>
+                    <li>
+                        <a href="./index.html" onclick="seleccionar()">
+                            <i class="fa-solid fa-house"></i>
+                            <span>Inicio</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'aperitivos' %}" onclick="seleccionar()">
+                            <i class="fa-solid fa-ice-cream"></i>
+                            <span>Aperitivos</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="./comida.html" onclick="seleccionar()">
+                            <i class="fa-solid fa-utensils"></i>
+                            <span>Comidas</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="./batidos.html" onclick="seleccionar()">
+                            <i class="fa-solid fa-glass-water"></i>
+                            <span>Refrescos</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="./contacto.html" onclick="seleccionar()">
+                            <i class="fa-solid fa-comments"></i>
+                            <span>Contacto</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="social">
+                <a href="./login.html">Iniciar Sesión</a>
+                <a href="https://www.instagram.com/"><i class="fa-brands fa-instagram"></i></a>
+                <a href="https://twitter.com/?lang=es"><i class="fa-brands fa-twitter"></i></a>
+            </div>
+            <div class="nav-responsive" id="bar" onclick="mostrarOcultarMenu()">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Carrusel de imágenes -->
+    <div class="carrusel">
+        <div class="gallery js-flickity" data-flickity-options='{ "wrapAround":true, "pageDots": false, "autoPlay": true}'>
+            <div class="gallery-cell">
+                <img src="img/receta2.jpg" alt="">
+            </div>
+            <div class="gallery-cell">
+                <img src="img/cuchillo.jpg" alt="">
+            </div>
+            <div class="gallery-cell">
+                <img src="img/recetas.jpg" alt="">
+            </div>
+            <div class="gallery-cell">
+                <img src="img/receta3.jpg" alt="">
+            </div>
+        </div>
+        
+        <!-- Información adicional sobre el carrusel -->
+        <div class="info">
+            <h2>La frescura en tu mesa, la salud en tu vida.</h2>
+        </div>
+    </div>
+</section>
+
+<!-- Sección de Comidas -->
+<section id="Comidas">
+    <!-- Título de la sección -->
+    <h2>¿No sabes que comer?</h2>
+    <h2>Te invitamos a revisar nuestras recetas saludables...</h2>
+        <!-- Contenedor de tarjetas de comidas -->
+    <div class="fila">
+        <!-- Tarjeta de Aperitivos -->
+        <div class="item">
+            <a href="./Aperitivos.html" class="card-link">
+                <div class="card">
+                    <img src="img/ceviche.jpg" class="card-img-top" alt="Aperitivos">
+                    <div class="card-body">
+                        <h5 class="card-title">Aperitivos</h5>
+                        <p class="card-text">Perfectos para picar.</p>
+                        <a href="./Aperitivos.html" class="btn btn-primary">Ver más</a>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- Tarjeta de Batidos -->
+        <div class="item">
+            <a href="./Batidos.html" class="card-link">
+                <div class="card">
+                    <img src="img/batido1.jpg" class="card-img-top" alt="Batidos">
+                    <div class="card-body">
+                        <h5 class="card-title">Refrescos</h5>
+                        <p class="card-text">Frescos y deliciosos.</p>
+                        <a href="./Batidos.html" class="btn btn-primary">Ver más</a>
+                    </div>                </div>
+            </a>
+        </div>
+        
+        <!-- Tarjeta de Comida -->
+        <div class="item">
+            <a href="./Comida.html" class="card-link">
+                <div class="card">
+                    <img src="img/plato1.jpg" class="card-img-top" alt="Comida">
+                    <div class="card-body">
+                        <h5 class="card-title">Comida</h5>
+                        <p class="card-text">Platos saludables.</p>
+                        <a href="./Comida.html" class="btn btn-primary">Ver más</a>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Pie de página -->
+<footer>
+    <div class="derechos">
+        <p>© 2024 Q'RICO - Todos los derechos reservados</p> <!-- Texto de derechos de autor -->
+    </div>
+</footer>
+
+<!-- Script para el funcionamiento del carrusel -->
+<script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
+
+<!-- Script personalizado para interacciones adicionales -->
+<script src="script.js"></script>
+
+<!-- Script para el efecto hover con jQuery -->
+<script>
+$(document).ready(function(){
+    // Seleccionar todas las tarjetas y añadir el efecto hover
+    $('.card').hover(
+        function() {
+            // Cuando el mouse está sobre la tarjeta
+            $(this).css('transform', 'scale(1.05)');
+        },
+        function() {
+            // Cuando el mouse deja la tarjeta
+            $(this).css('transform', 'scale(1)');
+        }
+    );
+});
+</script>
+
+</body>
+</html>

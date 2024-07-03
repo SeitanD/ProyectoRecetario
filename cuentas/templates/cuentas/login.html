@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q'RICO - Iniciar sesión</title>
+    <!-- Inclusión de la biblioteca de iconos Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Enlace al archivo de estilos CSS personalizado -->
+    <link rel="stylesheet" href="login-estilo.css">
+</head>
+<body>
+    <!-- SECCION LOGIN -->
+    <section id="login">
+        <!-- Encabezado con el logo -->
+        <header>
+            <div class="contenido-header">
+                <!-- Enlace al index a través del logo -->
+                <a href="index.html" class="logo" id="logo">
+                    <h1>Q'RICO</h1>
+                </a>
+            </div>
+        </header>
+        <!-- Formulario de inicio de sesión -->
+        <div class="formulario">
+            <!-- Título del formulario -->
+            <h2>Iniciar sesión</h2>
+            <!-- Formulario con campos de usuario y contraseña -->
+            <form id="form-login">
+                <!-- Campo para el usuario -->
+                <div class="campo">
+                    <!-- Icono de usuario -->
+                    <i class="fa-solid fa-user"></i>
+                    <!-- Input para el usuario -->
+                    <input type="text" id="usuario" name="usuario" placeholder="Usuario" required>
+                </div>
+                <!-- Campo para la contraseña -->
+                <div class="campo">
+                    <!-- Icono de candado -->
+                    <i class="fa-solid fa-lock"></i>
+                    <!-- Input para la contraseña -->
+                    <input type="password" id="password" name="password" placeholder="Contraseña" required>
+                </div>
+                <!-- Botón para enviar el formulario -->
+                <button type="submit">Ingresar</button>
+            </form>
+            <!-- Párrafo para mostrar mensajes de error o información -->
+            <p id="mensaje"></p>
+            <!-- Opciones adicionales: Registrarse y Olvidar contraseña -->
+            <div class="opciones">
+                <a href="./registro.html" id="registrarse">Registrarse</a>
+                <a href="./olvido-contraseña.html" id="olvidar-contraseña">¿Olvidaste tu contraseña?</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Script para manejar la lógica del formulario -->
+    <script src="login-script.js"></script>
+</body>
+</html>

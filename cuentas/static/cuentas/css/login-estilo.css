@@ -1,0 +1,94 @@
+/* Estilos generales para el cuerpo de la página */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+/* Estilos para el encabezado */
+header {
+    background-color: #ff8f46;
+    color: #fff;
+    padding: 10px 0;
+    text-align: center;
+}
+
+/* Estilos para el contenido del encabezado */
+.contenido-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+/* Estilo para el enlace del logo */
+#logo {
+    color: black; /* Color negro para el texto del logo */
+    text-decoration: none; /* Elimina el subrayado del enlace */
+}
+
+#logo:hover {
+    color: black; /* Mantén el color negro incluso cuando se pasa el cursor sobre el enlace */
+}
+
+/* Estilos para el texto del logo */
+.logo h1 {
+    margin: 0;
+}
+
+/* Estilos para el formulario de inicio de sesión */
+.formulario {
+    max-width: 400px;
+    margin: 50px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* Estilos para los campos del formulario */
+.campo {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+/* Estilos para los íconos dentro de los campos */
+.campo i {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 10px;
+    color: #888;
+}
+
+/* Estilos para los campos de entrada */
+input {
+    padding: 10px;
+    padding-left: 30px;
+    width: 90%;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+/* Estilos para el botón de enviar */
+button {
+    padding: 10px 20px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    width: 100%;
+}
+
+button:hover {
+    background-color: #ff8f46;
+}
+
+/* Estilos para el mensaje de error o información */
+#mensaje {
+    color: red;
+    text-align: center;
+    margin-top: 20px;
+}
