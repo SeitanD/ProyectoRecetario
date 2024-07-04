@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,8 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="estilo.css">
-    <link rel="stylesheet" href="batidos-estilo.css">
+    <link rel="stylesheet" href="{% static 'cuentas/css/batidos.css' %}">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
@@ -24,31 +24,31 @@
                 <nav id="nav">
                     <ul>
                         <li>
-                            <a href="./index.html" onclick="seleccionar()">
+                            <a href="{% url 'index' %}" onclick="seleccionar()">
                                 <i class="fa-solid fa-house"></i>
                                 <span>Inicio</span>
                             </a>
                         </li>
                         <li>
-                            <a href="aperitivos.html" onclick="seleccionar()">
+                            <a href="{% url 'aperitivos' %}" onclick="seleccionar()">
                                 <i class="fa-solid fa-ice-cream"></i>
                                 <span>Aperitivos</span>
                             </a>
                         </li>
                         <li>
-                            <a href="./comida.html" onclick="seleccionar()">
+                            <a href="{% url 'comida' %}" onclick="seleccionar()">
                                 <i class="fa-solid fa-utensils"></i>
                                 <span>Comidas</span>
                             </a>
                         </li>
                         <li>
-                            <a href="./batidos.html" onclick="seleccionar()">
+                            <a href="{% url 'batidos' %}" onclick="seleccionar()">
                                 <i class="fa-solid fa-glass-water"></i>
                                 <span>Refrescos</span>
                             </a>
                         </li>
                         <li>
-                            <a href="./contacto.html" onclick="seleccionar()">
+                            <a href="{% url 'contacto' %}" onclick="seleccionar()">
                                 <i class="fa-solid fa-comments"></i>
                                 <span>Contacto</span>
                             </a>
@@ -56,7 +56,7 @@
                     </ul>
                 </nav>
                 <div class="social">
-                    <a href="./login.html">Iniciar Sesión</a>
+                    <a href="{% url 'login' %}">Iniciar Sesión</a>
                     <a href="https://www.instagram.com/"><i class="fa-brands fa-instagram"></i></a>
                     <a href="https://twitter.com/?lang=es"><i class="fa-brands fa-twitter"></i></a>
                 </div>
@@ -69,16 +69,16 @@
         <div class="carrusel">
             <div class="gallery js-flickity" data-flickity-options='{ "wrapAround":true, "pageDots": false, "autoPlay": true }'>
                 <div class="gallery-cell">
-                    <img src="img/batidoice.jpg" alt="Batido 1">
+                    <img src="{% static 'cuentas/img/batidoice.jpg' %}" alt="Batido 1">
                 </div>
                 <div class="gallery-cell">
-                    <img src="img/batidokiwi.jpg" alt="Batido 2">
+                    <img src="{% static 'cuentas/img/batidokiwi.jpg' %}" alt="Batido 2">
                 </div>
                 <div class="gallery-cell">
-                    <img src="img/batidogfru.jpg" alt="Batido 3">
+                    <img src="{% static 'cuentas/img/batidogfru.jpg' %}" alt="Batido 3">
                 </div>
                 <div class="gallery-cell">
-                    <img src="img/batidoplatano.jpg" alt="Batido 4">
+                    <img src="{% static 'cuentas/img/batidoplatano.jpg' %}" alt="Batido 4">
                 </div>
             </div>
             <div class="info">
@@ -94,7 +94,7 @@
             <!-- Tarjeta 1 -->
             <div class="col-md-4 mb-4">
                 <div class="card">
-                    <img src="img/batido1.jpg" class="card-img-top" alt="Batido de fresa">
+                    <img src="{% static 'cuentas/img/batido1.jpg' %}" class="card-img-top" alt="Batido de fresa">
                     <div class="card-body">
                         <h5 class="card-title">Batido de fresa</h5>
                         <p class="card-text">Refrescante batido de fresas frescas.</p>
@@ -106,7 +106,7 @@
             <!-- Tarjeta 2 -->
             <div class="col-md-4 mb-4">
                 <div class="card">
-                    <img src="img/batido2.jpg" class="card-img-top" alt="Batido de plátano">
+                    <img src="{% static 'cuentas/img/batidoplatano.jpg' %}" class="card-img-top" alt="Batido de plátano">
                     <div class="card-body">
                         <h5 class="card-title">Batido de plátano</h5>
                         <p class="card-text">Delicioso batido de plátano y leche.</p>
@@ -118,7 +118,7 @@
             <!-- Tarjeta 3 -->
             <div class="col-md-4 mb-4">
                 <div class="card">
-                    <img src="img/batido3.jpg" class="card-img-top" alt="Batido de mango">
+                    <img src="{% static 'cuentas/img/batido3.jpg' %}" class="card-img-top" alt="Batido de mango">
                     <div class="card-body">
                         <h5 class="card-title">Batido de mango</h5>
                         <p class="card-text">Exótico batido de mango tropical.</p>
@@ -130,7 +130,7 @@
             <!-- Tarjeta 4 -->
             <div class="col-md-4 mb-4">
                 <div class="card">
-                    <img src="img/batido4.jpg" class="card-img-top" alt="Batido verde">
+                    <img src="{% static 'cuentas/img/batido4.jpg' %}" class="card-img-top" alt="Batido verde">
                     <div class="card-body">
                         <h5 class="card-title">Batido verde</h5>
                         <p class="card-text">Saludable batido verde con espinacas y manzana.</p>
@@ -142,7 +142,7 @@
             <!-- Tarjeta 5 -->
             <div class="col-md-4 mb-4">
                 <div class="card">
-                    <img src="img/batido5.jpg" class="card-img-top" alt="Batido de chocolate">
+                    <img src="{% static 'cuentas/img/batido5.jpg' %}" class="card-img-top" alt="Batido de chocolate">
                     <div class="card-body">
                         <h5 class="card-title">Batido de chocolate</h5>
                         <p class="card-text">Delicioso batido de chocolate con leche.</p>
@@ -154,7 +154,7 @@
             <!-- Tarjeta 6 -->
             <div class="col-md-4 mb-4">
                 <div class="card">
-                    <img src="img/batido6.jpg" class="card-img-top" alt="Batido de frambuesa">
+                    <img src="{% static 'cuentas/img/batido6.jpg' %}" class="card-img-top" alt="Batido de frambuesa">
                     <div class="card-body">
                         <h5 class="card-title">Batido de frambuesa</h5>
                         <p class="card-text">Refrescante batido de frambuesa con yogur.</p>
@@ -173,7 +173,7 @@
     <!-- Enlaces a scripts externos -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
-    <script src="batidos.js"></script>
+    <script src="{% static 'cuentas/js/batidos.js' %}"></script>
     <!-- Script para el efecto hover con jQuery -->
     <script>
         $(document).ready(function(){

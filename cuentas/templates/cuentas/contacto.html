@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +9,7 @@
     <!-- Inclusión de la biblioteca de iconos Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- Enlace al archivo de estilos CSS personalizado -->
-    <link rel="stylesheet" href="contacto-estilo.css">
+    <link rel="stylesheet" href="{% static 'cuentas/css/contacto-estilo.css' %}"
 </head>
 <body>
     <!-- SECCION CONTACTO -->
@@ -17,7 +18,7 @@
         <header>
             <div class="contenido-header">
                 <!-- Enlace al index a través del logo -->
-                <a href="index.html" class="logo" id="logo">
+                <a href="{% url 'index' %}" class="logo" id="logo">
                     <h1>Q'RICO</h1>
                 </a>
             </div>
@@ -80,6 +81,6 @@
     </div>
 
     <!-- Script para manejar la lógica del formulario -->
-    <script src="contacto-script.js"></script>
+    <script src="{% static 'cuentas/js/contacto-script.js' %}"></script>
 </body>
 </html>
