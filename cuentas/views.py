@@ -174,7 +174,7 @@ def editar_receta(request, receta_id):
             messages.error(request, 'Error al editar la receta. Por favor, corrige los errores.')  # Muestra un mensaje de error
     else:
         form = RecetaForm(instance=receta)  # Crea una instancia del formulario con la receta existente
-    return render(request, 'cuentas/editar_receta.html', {'form': form})  # Renderiza la plantilla editar_receta.html con el formulario
+        return render(request, 'cuentas/editar_receta.html', {'form': form})  # Renderiza la plantilla editar_receta.html con el formulario
 
 # Vista para editar un comentario
 @login_required  # Requiere que el usuario esté autenticado
