@@ -72,12 +72,17 @@
                             <span>Contacto</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="{% url 'blog' %}" onclick="seleccionar()">
+                            <i class="fa-solid fa-blog"></i>
+                            <span>Blog</span>
+                        </a>
+                    </li>
                 </ul>
             </nav>
             <div class="social">
-                <a href="{% url 'login' %}">Iniciar Sesión</a>
-                <a href="https://www.instagram.com/"><i class="fa-brands fa-instagram"></i></a>
-                <a href="https://twitter.com/?lang=es"><i class="fa-brands fa-twitter"></i></a>
+                <a href="{% url 'login' %}">Iniciar Sesión <i class="fa-solid fa-user"></i></a>
+                
             </div>
             <div class="nav-responsive" id="bar" onclick="mostrarOcultarMenu()">
                 <i class="fa-solid fa-bars"></i>
