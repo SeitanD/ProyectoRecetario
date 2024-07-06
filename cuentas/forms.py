@@ -15,18 +15,20 @@ class ComentarioForm(forms.ModelForm):
         fields = ['texto']
 
 class UserRegistroForm(UserCreationForm):
-    email = forms.EmailField(required=True)
+    email = forms.EmailField(required=True, label="Correo electrónico")
+    email_confirm = forms.EmailField(required=True, label="Confirmar correo electrónico")
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1', 'password2']
+        fields = ["username", "email", "email_confirm", "password1", "password2"]
 
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.email = self.cleaned_data['email']
-        if commit:
-            user.save()
-        return user
+    def clean(self):
+        cleaned_data = super().clean()
+        email = cleaned_data.get("email")
+        email_confirm = cleaned_data.get("email_confirm")
+        if email != email_confirm:
+            self.add_error("email_confirm", "Los correos electrónicos no coinciden.")
+        return cleaned_data
     
 class UserUpdateForm(forms.ModelForm):
     email = forms.EmailField()

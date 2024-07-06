@@ -26,6 +26,9 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     favoritos = models.ManyToManyField('Receta', blank=True)
 
+    def __str__(self):
+        return self.user.username
+
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:

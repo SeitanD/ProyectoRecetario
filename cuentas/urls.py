@@ -18,10 +18,9 @@ urlpatterns = [
     path('add_to_favorites/<int:receta_id>/', cuentas_views.add_to_favorites, name='add_to_favorites'),
     path('eliminar_favorito/<int:receta_id>/', cuentas_views.eliminar_favorito, name='eliminar_favorito'),
     path('add_comment/<int:receta_id>/', cuentas_views.add_comment, name='add_comment'),
-    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('logout/', cuentas_views.custom_logout_view, name='logout'),
     path('editar_receta/<int:receta_id>/', cuentas_views.editar_receta, name='editar_receta'),
     path('editar_comentario/<int:comentario_id>/', cuentas_views.editar_comentario, name='editar_comentario'),
     path('actualizar_perfil/', cuentas_views.actualizar_perfil, name='actualizar_perfil'),
     path('eliminar_cuenta/', cuentas_views.eliminar_cuenta, name='eliminar_cuenta'),
-
 ]
