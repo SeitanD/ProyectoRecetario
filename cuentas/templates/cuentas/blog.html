@@ -1,23 +1,24 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    {% load static %}
+    {% load static %} <!-- Carga la etiqueta 'static' de Django para usar archivos estáticos -->
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog Q'RICO</title>
+    <!-- Enlaces a hojas de estilo y scripts externos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="{% static 'cuentas/css/estilo.css' %}">
+    <link rel="stylesheet" href="{% static 'cuentas/css/estilo.css' %}"> <!-- Enlace a hoja de estilo estática de la aplicación -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha384-KyZXEAg3QhqLMpG8r+Knujsl5+5hb7O2l7e/Dc3V/J4G/ZR5gE5ydz7FAW8cfQ/9" crossorigin="anonymous"></script>
 </head>
 <body>
     <header>
         <div class="contenido-header">
             <div class="logo">
-                <h1>Q'RICO</h1>
+                <h1>Q'RICO</h1> <!-- Título del sitio web -->
             </div>
             <nav id="nav">
                 <ul>
@@ -66,15 +67,14 @@
                 </ul>
             </nav>
             <div class="social">
-                {% if user.is_authenticated %}
+                {% if user.is_authenticated %} <!-- Muestra el enlace de cierre de sesión si el usuario está autenticado -->
                     <a href="{% url 'logout' %}">Cerrar Sesión</a>
-                {% else %}
+                {% else %} <!-- Muestra el enlace de inicio de sesión si el usuario no está autenticado -->
                     <a href="{% url 'login' %}">Iniciar Sesión</a>
                 {% endif %}
-                <a href="https://www.instagram.com/"><i class="fa-brands fa-instagram"></i></a>
-                <a href="https://twitter.com/?lang=es"><i class="fa-brands fa-twitter"></i></a>
+                
             </div>
-            <div class="nav-responsive" id="bar" onclick="mostrarOcultarMenu()">
+            <div class="nav-responsive" id="bar" onclick="mostrarOcultarMenu()"> <!-- Botón para mostrar/ocultar el menú en dispositivos móviles -->
                 <i class="fa-solid fa-bars"></i>
             </div>
         </div>
@@ -82,33 +82,33 @@
 
     <main class="container mt-5">
         <h2>Añadir nueva receta</h2>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" name="crear_receta" class="btn btn-orange">Añadir receta</button>
+        <form method="post" enctype="multipart/form-data"> <!-- Formulario para añadir una nueva receta -->
+            {% csrf_token %} <!-- Token CSRF para seguridad -->
+            {{ form.as_p }} <!-- Renderiza los campos del formulario como párrafos -->
+            <button type="submit" name="crear_receta" class="btn btn-orange">Añadir receta</button> <!-- Botón para enviar el formulario -->
         </form>
 
         <h2 class="mt-5">Recetas</h2>
         <div class="row">
-            {% for receta in recetas %}
+            {% for receta in recetas %} <!-- Itera sobre todas las recetas -->
                 <div class="col-md-4">
                     <div class="card h-100" style="margin-bottom: 20px;">
-                        <img src="{{ receta.imagen.url }}" class="card-img-top" alt="{{ receta.titulo }}">
+                        <img src="{{ receta.imagen.url }}" class="card-img-top" alt="{{ receta.titulo }}"> <!-- Muestra la imagen de la receta -->
                         <div class="card-body">
-                            <h5 class="card-title">{{ receta.titulo }}</h5>
-                            <p class="card-text">{{ receta.descripcion|truncatewords:20 }}</p>
-                            <p class="card-text"><small class="text-muted">Autor: {{ receta.autor.username }} | Fecha: {{ receta.fecha_creacion }}</small></p>
-                            <form method="post" action="{% url 'add_to_favorites' receta.id %}">
+                            <h5 class="card-title">{{ receta.titulo }}</h5> <!-- Título de la receta -->
+                            <p class="card-text">{{ receta.descripcion }}</p> <!-- Descripción de la receta -->
+                            <p class="card-text"><small class="text-muted">Autor: {{ receta.autor.username }} | Fecha: {{ receta.fecha_creacion }}</small></p> <!-- Información del autor y fecha de creación -->
+                            <form method="post" action="{% url 'add_to_favorites' receta.id %}"> <!-- Formulario para añadir a favoritos -->
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-outline-primary btn-orange btn-sm">Añadir a Favoritos</button>
                             </form>
                         </div>
                         <div class="card-footer">
                             <h6>Comentarios</h6>
-                            {% for comentario in receta.comentarios.all %}
+                            {% for comentario in receta.comentarios.all %} <!-- Itera sobre todos los comentarios de la receta -->
                                 <div class="comentario">
-                                    <p><strong>{{ comentario.autor.username }}</strong>: {{ comentario.texto }}</p>
-                                    {% if comentario.autor == user %}
+                                    <p><strong>{{ comentario.autor.username }}</strong>: {{ comentario.texto }}</p> <!-- Muestra el autor y texto del comentario -->
+                                    {% if comentario.autor == user %} <!-- Opciones para editar/eliminar si el usuario actual es el autor del comentario -->
                                         <form method="post" action="{% url 'eliminar_comentario' comentario.id %}">
                                             {% csrf_token %}
                                             <button type="submit" class="btn btn-danger btn-orange btn-sm">Eliminar</button>
@@ -117,14 +117,14 @@
                                     {% endif %}
                                 </div>
                             {% endfor %}
-                            <form method="post" action="{% url 'blog' %}">
+                            <form method="post" action="{% url 'blog' %}"> <!-- Formulario para añadir un nuevo comentario -->
                                 {% csrf_token %}
-                                <input type="hidden" name="receta_id" value="{{ receta.id }}">
-                                {{ comentario_form.as_p }}
-                                <button type="submit" name="comentar" class="btn btn-primary btn-orange btn-sm mt-2">Comentar</button>
+                                <input type="hidden" name="receta_id" value="{{ receta.id }}"> <!-- ID de la receta a comentar -->
+                                {{ comentario_form.as_p }} <!-- Renderiza los campos del formulario de comentarios como párrafos -->
+                                <button type="submit" name="comentar" class="btn btn-primary btn-orange btn-sm mt-2">Comentar</button> <!-- Botón para enviar el comentario -->
                             </form>
                         </div>
-                        {% if receta.autor == user %}
+                        {% if receta.autor == user %} <!-- Opciones para editar/eliminar si el usuario actual es el autor de la receta -->
                             <form method="post" action="{% url 'eliminar_receta' receta.id %}">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-danger btn-orange btn-sm">Eliminar receta</button>
@@ -137,11 +137,11 @@
         </div>
     </main>
 
-    <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
-    <script src="{% static 'cuentas/js/script.js' %}"></script>
+    <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script> <!-- Script para funcionalidad de carrusel -->
+    <script src="{% static 'cuentas/js/script.js' %}"></script> <!-- Script estático personalizado -->
     <script>
     $(document).ready(function(){
-        $('.card').hover(
+        $('.card').hover(  <!-- Añade un efecto de zoom al pasar el ratón sobre las tarjetas -->
             function() {
                 $(this).css('transform', 'scale(1.05)');
             },

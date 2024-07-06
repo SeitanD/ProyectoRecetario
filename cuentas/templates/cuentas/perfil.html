@@ -50,7 +50,7 @@
                         <img src="{{ receta.imagen.url }}" class="card-img-top" alt="{{ receta.titulo }}">
                         <div class="card-body">
                             <h5 class="card-title">{{ receta.titulo }}</h5>
-                            <p class="card-text">{{ receta.descripcion|truncatewords:20 }}</p>
+                            <p class="card-text">{{ receta.descripcion }}</p>
                             <p class="card-text"><small class="text-muted">Autor: {{ receta.autor.username }} | Fecha: {{ receta.fecha_creacion }}</small></p>
                         </div>
                         <div class="card-footer">
