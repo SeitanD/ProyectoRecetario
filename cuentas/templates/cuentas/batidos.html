@@ -23,54 +23,64 @@
                 </div>
                 <nav id="nav">
                     <ul>
+                        <!-- Enlaces de navegación -->
                         <li>
-                            <a href="{% url 'index' %}" onclick="seleccionar()">
+                            <a href="{% url 'index' %}">
                                 <i class="fa-solid fa-house"></i>
                                 <span>Inicio</span>
                             </a>
                         </li>
                         <li>
-                            <a href="{% url 'aperitivos' %}" onclick="seleccionar()">
+                            <a href="{% url 'aperitivos' %}">
                                 <i class="fa-solid fa-ice-cream"></i>
                                 <span>Aperitivos</span>
                             </a>
                         </li>
                         <li>
-                            <a href="{% url 'comida' %}" onclick="seleccionar()">
+                            <a href="{% url 'comida' %}">
                                 <i class="fa-solid fa-utensils"></i>
                                 <span>Comidas</span>
                             </a>
                         </li>
                         <li>
-                            <a href="{% url 'batidos' %}" onclick="seleccionar()">
+                            <a href="{% url 'batidos' %}">
                                 <i class="fa-solid fa-glass-water"></i>
                                 <span>Refrescos</span>
                             </a>
                         </li>
                         <li>
-                            <a href="{% url 'contacto' %}" onclick="seleccionar()">
+                            <a href="{% url 'contacto' %}">
                                 <i class="fa-solid fa-comments"></i>
                                 <span>Contacto</span>
                             </a>
                         </li>
                         <li>
-                            <a href="{% url 'blog' %}" onclick="seleccionar()">
+                            <a href="{% url 'blog' %}">
                                 <i class="fa-solid fa-blog"></i>
                                 <span>Blog</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'perfil' %}">
+                                <i class="fa-solid fa-user"></i>
+                                <span>Perfil</span>
                             </a>
                         </li>
                     </ul>
                 </nav>
                 <div class="social">
-                    <a href="{% url 'login' %}">Iniciar Sesión</a>
-                    <a href="https://www.instagram.com/"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="https://twitter.com/?lang=es"><i class="fa-brands fa-twitter"></i></a>
-                </div>
-                <div class="nav-responsive" id="bar" onclick="mostrarOcultarMenu()">
-                    <i class="fa-solid fa-bars"></i>
-                </div>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'logout' %}" class="btn btn-orange">Cerrar Sesión <i class="fa-solid fa-user"></i></a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-orange">Iniciar Sesión <i class="fa-solid fa-user"></i></a>
+                {% endif %}
             </div>
-        </header>
+            <div class="nav-responsive" id="bar" onclick="mostrarOcultarMenu()">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+    
+            </div>
+        </header>    
         <!-- Carrusel de imágenes -->
         <div class="carrusel">
             <div class="gallery js-flickity" data-flickity-options='{ "wrapAround":true, "pageDots": false, "autoPlay": true }'>
