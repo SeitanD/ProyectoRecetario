@@ -1,13 +1,19 @@
 from django import forms  # Importa el módulo de formularios de Django
-from .models import Receta, Comentario  # Importa los modelos Receta y Comentario del archivo models.py
+from .models import Receta, Comentario, Valoracion  # Importa los modelos Receta, Comentario y Valoracion del archivo models.py
 from django.contrib.auth.models import User  # Importa el modelo User del módulo de autenticación de Django
 from django.contrib.auth.forms import UserCreationForm  # Importa el formulario de creación de usuarios
 from django.core.exceptions import ValidationError  # Importa la excepción ValidationError para validaciones personalizadas
 
-class RecetaForm(forms.ModelForm):  # Define un formulario basado en el modelo Receta
+class RecetaForm(forms.ModelForm):
     class Meta:
-        model = Receta  # Especifica que este formulario se basa en el modelo Receta
-        fields = ['titulo', 'descripcion', 'imagen']  # Incluye los campos 'titulo', 'descripcion' e 'imagen' en el formulario
+        model = Receta
+        fields = ['titulo', 'ingredientes', 'preparacion', 'imagen']
+        widgets = {
+            'titulo': forms.TextInput(attrs={'class': 'form-control'}),
+            'ingredientes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'preparacion': forms.Textarea(attrs={'class': 'form-control', 'rows': 5}),
+            'imagen': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+        }
 
 class ComentarioForm(forms.ModelForm):  # Define un formulario basado en el modelo Comentario
     class Meta:
@@ -57,3 +63,17 @@ class UserUpdateForm(forms.ModelForm):  # Define un formulario para actualizar u
         if commit:  # Si commit es True
             user.save()  # Guarda el usuario en la base de datos
         return user  # Devuelve el usuario guardado
+
+class ValoracionForm(forms.ModelForm):
+    class Meta:
+        model = Valoracion
+        fields = ['puntuacion']
+        widgets = {
+            'puntuacion': forms.RadioSelect(choices=[
+                (1, '1 estrella'),
+                (2, '2 estrellas'),
+                (3, '3 estrellas'),
+                (4, '4 estrellas'),
+                (5, '5 estrellas'),
+            ])
+        }

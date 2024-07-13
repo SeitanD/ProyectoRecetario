@@ -78,7 +78,6 @@
                             <span>Blog</span>
                         </a>
                     </li>
-                    
                 </ul>
             </nav>
             <div class="social">
@@ -91,25 +90,29 @@
         <div class="nav-responsive" id="bar" onclick="mostrarOcultarMenu()">
             <i class="fa-solid fa-bars"></i>
         </div>
-
         </div>
     </header>     
 
-
-
-    <main class="container mt-4">
-        <h2>Iniciar Sesión</h2>
-        {% if form.errors %}
-            <div class="alert alert-danger">
-                Nombre de usuario o contraseña incorrectos.
-            </div>
-        {% endif %}
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
-            
-        </form>
+    <main class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+        <div class="form-container">
+            <h2 class="text-center mb-4">Iniciar Sesión</h2>
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    Nombre de usuario o contraseña incorrectos.
+                </div>
+            {% endif %}
+            <form method="post" class="form">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="button-submit">Iniciar Sesión</button>
+                <div class="text-center">
+                    <a href="{% url 'olvido_contraseña' %}" class="span">¿Olvidaste tu contraseña?</a>
+                </div>
+                <div class="text-center mt-3">
+                    <p class="p">¿No tienes una cuenta? <a href="{% url 'registro' %}" class="span">Regístrate aquí</a></p>
+                </div>
+            </form>
+        </div>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

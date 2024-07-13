@@ -2,38 +2,19 @@
 <html lang="es">
 <head>
     {% load static %}
-    <!-- Definición del conjunto de caracteres -->
     <meta charset="UTF-8">
-    
-    <!-- Configuraciones para compatibilidad con navegadores antiguos -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    
-    <!-- Configuración para el tamaño y escalabilidad del sitio en dispositivos móviles -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- Título de la página -->
     <title>Q'RICO</title>
-    
-    <!-- Enlace a la biblioteca Font Awesome para iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    
-    <!-- Estilos de la biblioteca Flickity para el carrusel -->
     <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
-    
-    <!-- Estilos y scripts de Bootstrap para diseño y funcionalidad -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- Estilos personalizados del sitio -->
     <link rel="stylesheet" href="{% static 'cuentas/css/blog.css' %}">
-    
-    <!-- Incluir la biblioteca jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha384-KyZXEAg3QhqLMpG8r+Knujsl5+5hb7O2l7e/Dc3V/J4G/ZR5gE5ydz7FAW8cfQ/9" crossorigin="anonymous"></script>
 </head>
 <body>
-<!-- Sección principal de la página -->
 <section id="inicio">
-    <!-- Cabecera del sitio -->
     <header>
         <div class="contenido-header">
             <div class="logo">
@@ -41,62 +22,23 @@
             </div>
             <nav id="nav">
                 <ul>
-                    <!-- Enlaces de navegación -->
-                    <li>
-                        <a href="{% url 'index' %}">
-                            <i class="fa-solid fa-house"></i>
-                            <span>Inicio</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'aperitivos' %}">
-                            <i class="fa-solid fa-ice-cream"></i>
-                            <span>Aperitivos</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'comida' %}">
-                            <i class="fa-solid fa-utensils"></i>
-                            <span>Comidas</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'batidos' %}">
-                            <i class="fa-solid fa-glass-water"></i>
-                            <span>Refrescos</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'contacto' %}">
-                            <i class="fa-solid fa-comments"></i>
-                            <span>Contacto</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'blog' %}">
-                            <i class="fa-solid fa-blog"></i>
-                            <span>Blog</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'perfil' %}">
-                            <i class="fa-solid fa-user"></i>
-                            <span>Perfil</span>
-                        </a>
-                    </li>
+                    <li><a href="{% url 'index' %}"><i class="fa-solid fa-house"></i><span>Inicio</span></a></li>
+                    <li><a href="{% url 'aperitivos' %}"><i class="fa-solid fa-ice-cream"></i><span>Aperitivos</span></a></li>
+                    <li><a href="{% url 'comida' %}"><i class="fa-solid fa-utensils"></i><span>Comidas</span></a></li>
+                    <li><a href="{% url 'batidos' %}"><i class="fa-solid fa-glass-water"></i><span>Refrescos</span></a></li>
+                    <li><a href="{% url 'contacto' %}"><i class="fa-solid fa-comments"></i><span>Contacto</span></a></li>
+                    <li><a href="{% url 'blog' %}"><i class="fa-solid fa-blog"></i><span>Blog</span></a></li>
+                    <li><a href="{% url 'perfil' %}"><i class="fa-solid fa-user"></i><span>Perfil</span></a></li>
                 </ul>
             </nav>
             <div class="social">
                 {% if user.is_authenticated %}
-                <a href="{% url 'logout' %}" class="btn btn-orange">Cerrar Sesión <i class="fa-solid fa-user"></i></a>
-            {% else %}
-                <a href="{% url 'login' %}" class="btn btn-orange">Iniciar Sesión <i class="fa-solid fa-user"></i></a>
-            {% endif %}
-        </div>
-        <div class="nav-responsive" id="bar" onclick="mostrarOcultarMenu()">
-            <i class="fa-solid fa-bars"></i>
-        </div>
-
+                    <a href="{% url 'logout' %}" class="btn btn-orange">Cerrar Sesión <i class="fa-solid fa-user"></i></a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-orange">Iniciar Sesión <i class="fa-solid fa-user"></i></a>
+                {% endif %}
+            </div>
+            <div class="nav-responsive" id="bar" onclick="mostrarOcultarMenu()"><i class="fa-solid fa-bars"></i></div>
         </div>
     </header>    
 
@@ -105,19 +47,28 @@
         <div class="row">
             {% for receta in recetas %}
                 <div class="col-md-4">
-                    <div class="card h-100" style="margin-bottom: 20px;">
+                    <div class="card h-100 mb-4">
                         <img src="{{ receta.imagen.url }}" class="card-img-top" alt="{{ receta.titulo }}">
                         <div class="card-body">
                             <h5 class="card-title">{{ receta.titulo }}</h5>
-                            <p class="card-text">{{ receta.descripcion }}</p>
                             <p class="card-text"><small class="text-muted">Autor: {{ receta.autor.username }} | Fecha: {{ receta.fecha_creacion }}</small></p>
+                            <p class="card-text">Ingredientes: {{ receta.ingredientes }}</p>
+                            <p class="card-text">Preparación: {{ receta.preparacion }}</p>
+                            <p class="card-text">Valoración: <span class="average-rating">{{ receta.valoracion }}</span> estrellas (<span class="total-ratings">{{ receta.total_valoraciones }}</span> valoraciones)</p>
                             {% if user.is_authenticated %}
-                                <form method="post" action="{% url 'add_to_favorites' receta.id %}">
+                                <div class="rating">
+                                    <input type="radio" id="star-1-{{ receta.id }}" name="rating-{{ receta.id }}" value="1"><label for="star-1-{{ receta.id }}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path></svg></label>
+                                    <input type="radio" id="star-2-{{ receta.id }}" name="rating-{{ receta.id }}" value="2"><label for="star-2-{{ receta.id }}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path></svg></label>
+                                    <input type="radio" id="star-3-{{ receta.id }}" name="rating-{{ receta.id }}" value="3"><label for="star-3-{{ receta.id }}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path></svg></label>
+                                    <input type="radio" id="star-4-{{ receta.id }}" name="rating-{{ receta.id }}" value="4"><label for="star-4-{{ receta.id }}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path></svg></label>
+                                    <input type="radio" id="star-5-{{ receta.id }}" name="rating-{{ receta.id }}" value="5"><label for="star-5-{{ receta.id }}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path></svg></label>
+                                </div>
+                                <form method="post" action="{% url 'add_to_favorites' receta.id %}" class="mt-2">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-outline-primary btn-orange btn-sm">Añadir a Favoritos</button>
                                 </form>
                             {% else %}
-                                <p><a href="{% url 'login' %}">Inicia sesión</a> para añadir a favoritos.</p>
+                                <p><a href="{% url 'login' %}">Inicia sesión</a> para valorar y añadir a favoritos.</p>
                             {% endif %}
                         </div>
                         <div class="card-footer">
@@ -145,11 +96,11 @@
                             {% endif %}
                         </div>
                         {% if receta.autor == user %}
-                            <form method="post" action="{% url 'eliminar_receta' receta.id %}">
+                            <form method="post" action="{% url 'eliminar_receta' receta.id %}" class="mt-2">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-danger btn-orange btn-sm">Eliminar receta</button>
                             </form>
-                            <a href="{% url 'editar_receta' receta.id %}" class="btn btn-warning btn-orange btn-sm">Editar</a>
+                            <a href="{% url 'editar_receta' receta.id %}" class="btn btn-warning btn-orange btn-sm mt-2">Editar</a>
                         {% endif %}
                     </div>
                 </div>
@@ -170,5 +121,28 @@
 
     <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
     <script src="{% static 'cuentas/js/script.js' %}"></script>
+    <script>
+        $(document).ready(function() {
+            $('.rating input').on('click', function() {
+                var recetaId = $(this).attr('name').split('-')[1];
+                var puntuacion = $(this).val();
+                $.ajax({
+                    url: '/add_rating/' + recetaId + '/',
+                    type: 'POST',
+                    data: {
+                        'puntuacion': puntuacion,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(response) {
+                        $('.average-rating').text(response.new_rating);
+                        $('.total-ratings').text(response.total_ratings);
+                    },
+                    error: function(response) {
+                        alert('Error al enviar la valoración');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

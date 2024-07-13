@@ -1,10 +1,11 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
 from django.contrib.auth.models import User
-from .models import Receta, Comentario, Profile
-from .forms import RecetaForm, ComentarioForm, UserRegistroForm, UserUpdateForm
+from .models import Receta, Comentario, Profile, Valoracion
+from .forms import RecetaForm, ComentarioForm, UserRegistroForm, UserUpdateForm, ValoracionForm
 
 # Vista para la página principal
 def index(request):
@@ -51,6 +52,7 @@ def blog(request):
     context = {
         'recetas': recetas,
         'comentario_form': ComentarioForm(),
+        'valoracion_form': ValoracionForm(),
     }
     return render(request, 'cuentas/blog.html', context)
 
@@ -86,6 +88,31 @@ def add_comment(request, receta_id):
         else:
             messages.error(request, 'Error al agregar el comentario. Por favor, corrige los errores.')
     return redirect('blog')
+
+# Vista para agregar valoración (requiere autenticación)
+@login_required
+def add_rating(request, receta_id):
+    if request.method == 'POST':
+        puntuacion = int(request.POST.get('puntuacion'))
+        receta = get_object_or_404(Receta, id=receta_id)
+
+        # Crear o actualizar la valoración del usuario
+        valoracion, created = Valoracion.objects.update_or_create(
+            usuario=request.user, receta=receta,
+            defaults={'puntuacion': puntuacion}
+        )
+
+        # Recalcular la valoración promedio de la receta
+        all_ratings = Valoracion.objects.filter(receta=receta)
+        total_rating = sum(r.puntuacion for r in all_ratings)
+        average_rating = total_rating / all_ratings.count()
+
+        receta.valoracion = average_rating
+        receta.total_valoraciones = all_ratings.count()
+        receta.save()
+
+        return JsonResponse({'success': True, 'new_rating': average_rating, 'total_ratings': all_ratings.count()})
+    return JsonResponse({'success': False}, status=400)
 
 # Vista para eliminar una receta
 @login_required

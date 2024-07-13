@@ -24,4 +24,5 @@ urlpatterns = [
     path('editar_comentario/<int:comentario_id>/', cuentas_views.editar_comentario, name='editar_comentario'),
     path('actualizar_perfil/', cuentas_views.actualizar_perfil, name='actualizar_perfil'),
     path('eliminar_cuenta/', cuentas_views.eliminar_cuenta, name='eliminar_cuenta'),
+    path('add_rating/<int:receta_id>/', cuentas_views.add_rating, name='add_rating'),
 ]

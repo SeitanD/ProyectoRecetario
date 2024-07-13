@@ -1,19 +1,19 @@
-/* Establece reglas para todos los elementos del documento */
+/* Reglas generales para todos los elementos del documento */
 * {
     margin: 0;
     padding: 0;
-    font-family: 'Quicksand'; /* Establece la fuente para todo el documento */
+    font-family: 'Quicksand'; /* Fuente principal */
 }
 
 html {
-    scroll-behavior: smooth; /* Añade un desplazamiento suave al hacer clic en enlaces internos */
+    scroll-behavior: smooth; /* Desplazamiento suave en enlaces internos */
 }
 
-/* SECCION INICIO */
+/* Sección de inicio */
 #inicio {
-    height: 100vh; /* Establece la altura al 100% del viewport */
+    height: 100vh; /* Altura completa del viewport */
     display: flex;
-    flex-direction: column; /* Organiza los elementos en columna */
+    flex-direction: column; /* Elementos en columna */
 }
 
 #inicio header .contenido-header {
@@ -99,7 +99,7 @@ footer .derechos {
     margin: 0;
 }
 
-/* Estilos generales para el cuerpo de la página */
+/* Estilos generales para el cuerpo */
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
@@ -115,7 +115,7 @@ header {
     text-align: center;
 }
 
-/* Estilos para el contenido del encabezado */
+/* Contenido del encabezado */
 .contenido-header {
     display: flex;
     justify-content: space-between;
@@ -123,22 +123,22 @@ header {
     padding: 0 20px;
 }
 
-/* Estilo para el enlace del logo */
+/* Enlace del logo */
 #logo {
-    color: black; /* Color negro para el texto del logo */
-    text-decoration: none; /* Elimina el subrayado del enlace */
+    color: black; /* Color negro */
+    text-decoration: none; /* Sin subrayado */
 }
 
 #logo:hover {
-    color: black; /* Mantén el color negro incluso cuando se pasa el cursor sobre el enlace */
+    color: black; /* Mantén el color negro al pasar el cursor */
 }
 
-/* Estilos para el texto del logo */
+/* Texto del logo */
 .logo h1 {
     margin: 0;
 }
 
-/* Estilos para el formulario de contacto */
+/* Formulario de contacto */
 .formulario {
     max-width: 400px;
     margin: 50px auto;
@@ -148,13 +148,13 @@ header {
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
-/* Estilos para los campos del formulario */
+/* Campos del formulario */
 .campo {
     margin-bottom: 20px;
     position: relative;
 }
 
-/* Estilos para los íconos dentro de los campos */
+/* Íconos dentro de los campos */
 .campo i {
     position: absolute;
     top: 50%;
@@ -163,7 +163,7 @@ header {
     color: #888;
 }
 
-/* Estilos para los campos de entrada */
+/* Campos de entrada */
 input,
 textarea {
     padding: 10px;
@@ -173,7 +173,7 @@ textarea {
     border-radius: 3px;
 }
 
-/* Estilos para el botón de enviar */
+/* Botón de enviar */
 button {
     padding: 10px 20px;
     background-color: #333;
@@ -188,14 +188,14 @@ button:hover {
     background-color: #ff8f46;
 }
 
-/* Estilos para el mensaje de error o información */
+/* Mensaje de error o información */
 #respuesta {
     color: red;
     text-align: center;
     margin-top: 20px;
 }
 
-/* Estilos para el modal de confirmación */
+/* Modal de confirmación */
 .modal {
     display: none; /* Escondido por defecto */
     position: fixed; /* Fijo en la pantalla */
@@ -235,8 +235,42 @@ button:hover {
     background-color: #ff8f46;
 }
 
+/* Botones naranjas */
+.btn-orange {
+    background-color: #ff8f46;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    text-align: center;
+}
 
-/* SECCION RESPONSIVE */
+.btn-orange:hover {
+    background-color: #e07d3c;
+    color: #fff;
+}
+
+.btn-outline-orange {
+    background-color: transparent;
+    color: #ff8f46;
+    border: 2px solid #ff8f46;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+.btn-outline-orange:hover {
+    background-color: #ff8f46;
+    color: #fff;
+}
+
+/* Sección responsive */
 @media screen and (max-width: 1070px) {
     #inicio header .contenido-header .social {
         display: none;
@@ -264,3 +298,142 @@ button:hover {
     }
 }
 
+/* Estilos adicionales para el formulario de inicio de sesión */
+.form-container {
+    background: linear-gradient(45deg, red, yellow);
+    padding: 30px;
+    width: 100%;
+    max-width: 450px;
+    border-radius: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    transition: background 0.3s ease;
+}
+
+.form-container:hover {
+    background: linear-gradient(45deg, yellow, red);
+}
+
+.form-container .form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form-container ::placeholder {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+.form-container .form button {
+    align-self: flex-end;
+}
+
+.form-container .flex-column > label {
+    color: #151717;
+    font-weight: 600;
+}
+
+.form-container .inputForm {
+    border: 1.5px solid #ecedec;
+    border-radius: 10em;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    transition: 0.2s ease-in-out;
+    background-color: white;
+}
+
+.form-container .input {
+    margin-left: 10px;
+    border-radius: 10rem;
+    border: none;
+    width: 100%;
+    height: 100%;
+}
+
+.form-container .input:focus {
+    outline: none;
+}
+
+.form-container .inputForm:focus-within {
+    border: 1.5px solid #2d79f3;
+}
+
+.form-container .flex-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    justify-content: space-between;
+}
+
+.form-container .flex-row > div > label {
+    font-size: 14px;
+    color: black;
+    font-weight: 400;
+}
+
+.form-container .span {
+    font-size: 14px;
+    margin-left: 5px;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.form-container .button-submit {
+    position: relative;
+    display: inline-block;
+    padding: 15px 30px;
+    text-align: center;
+    letter-spacing: 1px;
+    text-decoration: none;
+    background: transparent;
+    transition: ease-out 0.5s;
+    border: 2px solid;
+    border-radius: 10em;
+    box-shadow: inset 0 0 0 0 red;
+    margin: 20px 0 10px 0;
+    color: white;
+    font-size: 15px;
+    font-weight: 500;
+    height: 50px;
+    width: 100%;
+    cursor: pointer;
+}
+
+.form-container .button-submit:hover {
+    color: white;
+    box-shadow: inset 0 -100px 0 0 darkorange;
+}
+
+.form-container .button-submit:active {
+    transform: scale(0.9);
+}
+
+.form-container .p {
+    text-align: center;
+    color: black;
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+.form-container .btn {
+    margin-top: 10px;
+    width: 100%;
+    height: 50px;
+    border-radius: 10em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 500;
+    gap: 10px;
+    border: 1px solid #ededef;
+    background-color: white;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+}
+
+.form-container .btn:hover {
+    border: 1px solid #2d79f3;
+}
