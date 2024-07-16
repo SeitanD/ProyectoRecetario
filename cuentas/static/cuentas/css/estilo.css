@@ -1,19 +1,19 @@
-/* Reglas generales para todos los elementos del documento */
+/* Establece reglas para todos los elementos del documento */
 * {
     margin: 0;
     padding: 0;
-    font-family: 'Quicksand'; /* Fuente principal */
+    font-family: 'Quicksand'; /* Establece la fuente para todo el documento */
 }
 
 html {
-    scroll-behavior: smooth; /* Desplazamiento suave en enlaces internos */
+    scroll-behavior: smooth; /* Añade un desplazamiento suave al hacer clic en enlaces internos */
 }
 
-/* Sección de inicio */
+/* SECCION INICIO */
 #inicio {
-    height: 100vh; /* Altura completa del viewport */
+    height: 100vh; /* Establece la altura al 100% del viewport */
     display: flex;
-    flex-direction: column; /* Elementos en columna */
+    flex-direction: column; /* Organiza los elementos en columna */
 }
 
 #inicio header .contenido-header {
@@ -84,6 +84,123 @@ html {
     color: #a8a8a8;
 }
 
+/* Carrusel */
+#inicio .carrusel {
+    position: relative;
+    height: 100%;
+}
+
+#inicio .carrusel .info {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+    text-align: center;
+    color: #ffffff;
+}
+
+#inicio .carrusel .info h2 {
+    font-size: 70px; /* Aumenta el tamaño del texto */
+    margin-bottom: 20px;
+}
+
+#inicio .carrusel .info button {
+    display: inline-block;
+    margin-top: 30px;
+    font-size: 50px;
+    border: none;
+    background-color: #f1a239;
+    color: #ffffff;
+    padding: 7px 25px;
+    border-radius: 30px;
+    cursor: pointer;
+}
+
+#inicio .gallery {
+    width: 100%;
+    height: 100%;
+}
+
+#inicio .gallery-cell {
+    width: 100%;
+    margin-right: 10px;
+    height: 100%;
+}
+
+#inicio .gallery-cell img {
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+}
+
+/* SECCION COMIDAS */
+#Comidas {
+    padding: 50px 0;
+}
+
+#Comidas h2 {
+    text-align: center;
+    font-weight: bold;
+    font-size: 50px; /* Aumenta el tamaño del título */
+}
+
+#Comidas .fila {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 1100px;
+    margin: auto;
+}
+
+#Comidas .fila .item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px 10px;
+    padding: 5px;
+}
+
+#Comidas .fila .item .card {
+    width: 18rem;
+    transition: transform 0.2s;
+}
+
+#Comidas .fila .item .card:hover {
+    transform: scale(1.05);
+}
+
+#Comidas .fila .item img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+#Comidas .fila .item .card-body {
+    text-align: center;
+}
+
+/* Estilos para los botones dentro de las tarjetas */
+#Comidas button, #Comidas .btn-primary {
+    display: block;
+    width: fit-content;
+    margin: auto;
+    margin-top: 20px;
+    font-size: 20px;
+    border: none;
+    background-color: #333;
+    color: #fff;
+    padding: 7px 25px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#Comidas button:hover, #Comidas .btn-primary:hover {
+    background-color: #ff8f46;
+}
+
 /* Pie de página */
 footer {
     background-color: #333;
@@ -99,178 +216,7 @@ footer .derechos {
     margin: 0;
 }
 
-/* Estilos generales para el cuerpo */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
-}
-
-/* Estilos para el encabezado */
-header {
-    background-color: #ff8f46;
-    color: #fff;
-    padding: 10px 0;
-    text-align: center;
-}
-
-/* Contenido del encabezado */
-.contenido-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-}
-
-/* Enlace del logo */
-#logo {
-    color: black; /* Color negro */
-    text-decoration: none; /* Sin subrayado */
-}
-
-#logo:hover {
-    color: black; /* Mantén el color negro al pasar el cursor */
-}
-
-/* Texto del logo */
-.logo h1 {
-    margin: 0;
-}
-
-/* Formulario de contacto */
-.formulario {
-    max-width: 400px;
-    margin: 50px auto;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-
-/* Campos del formulario */
-.campo {
-    margin-bottom: 20px;
-    position: relative;
-}
-
-/* Íconos dentro de los campos */
-.campo i {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    left: 10px;
-    color: #888;
-}
-
-/* Campos de entrada */
-input,
-textarea {
-    padding: 10px;
-    padding-left: 30px;
-    width: 90%;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-}
-
-/* Botón de enviar */
-button {
-    padding: 10px 20px;
-    background-color: #333;
-    color: #fff;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-    width: 100%;
-}
-
-button:hover {
-    background-color: #ff8f46;
-}
-
-/* Mensaje de error o información */
-#respuesta {
-    color: red;
-    text-align: center;
-    margin-top: 20px;
-}
-
-/* Modal de confirmación */
-.modal {
-    display: none; /* Escondido por defecto */
-    position: fixed; /* Fijo en la pantalla */
-    z-index: 1; /* En frente de otros elementos */
-    left: 0;
-    top: 0;
-    width: 100%; /* Ancho completo */
-    height: 100%; /* Alto completo */
-    overflow: auto; /* Habilitar desplazamiento si es necesario */
-    background-color: rgb(0,0,0); /* Color de fondo */
-    background-color: rgba(0,0,0,0.4); /* Color de fondo con opacidad */
-}
-
-/* Contenido del modal */
-.modal-contenido {
-    background-color: #fefefe;
-    margin: 15% auto; /* 15% desde la parte superior y centrado */
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%; /* Ancho del 80% */
-    max-width: 300px; /* Ancho máximo */
-    text-align: center; /* Centrar el texto */
-    border-radius: 5px;
-}
-
-#cerrar-modal {
-    padding: 10px 20px;
-    background-color: #333;
-    color: #fff;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-    width: 100%;
-}
-
-#cerrar-modal:hover {
-    background-color: #ff8f46;
-}
-
-/* Botones naranjas */
-.btn-orange {
-    background-color: #ff8f46;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-    display: block;
-    width: 100%;
-    text-align: center;
-}
-
-.btn-orange:hover {
-    background-color: #e07d3c;
-    color: #fff;
-}
-
-.btn-outline-orange {
-    background-color: transparent;
-    color: #ff8f46;
-    border: 2px solid #ff8f46;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-    display: block;
-    width: 100%;
-    text-align: center;
-}
-
-.btn-outline-orange:hover {
-    background-color: #ff8f46;
-    color: #fff;
-}
-
-/* Sección responsive */
+/* SECCION RESPONSIVE */
 @media screen and (max-width: 1070px) {
     #inicio header .contenido-header .social {
         display: none;
@@ -297,143 +243,34 @@ button:hover {
         padding: 20px;
     }
 }
-
-/* Estilos adicionales para el formulario de inicio de sesión */
-.form-container {
-    background: linear-gradient(45deg, red, yellow);
-    padding: 30px;
-    width: 100%;
-    max-width: 450px;
-    border-radius: 20px;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-    transition: background 0.3s ease;
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+.card {
+    transition: transform 0.2s;
 }
 
-.form-container:hover {
-    background: linear-gradient(45deg, yellow, red);
+.card:hover {
+    transform: scale(1.05);
 }
 
-.form-container .form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+.comentario {
+    border-bottom: 1px solid #e0e0e0;
+    padding: 5px 0;
 }
 
-.form-container ::placeholder {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+.card-footer {
+    background-color: #f8f9fa;
 }
 
-.form-container .form button {
-    align-self: flex-end;
-}
-
-.form-container .flex-column > label {
-    color: #151717;
-    font-weight: 600;
-}
-
-.form-container .inputForm {
-    border: 1.5px solid #ecedec;
-    border-radius: 10em;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    padding-left: 10px;
-    transition: 0.2s ease-in-out;
-    background-color: white;
-}
-
-.form-container .input {
-    margin-left: 10px;
-    border-radius: 10rem;
-    border: none;
-    width: 100%;
-    height: 100%;
-}
-
-.form-container .input:focus {
-    outline: none;
-}
-
-.form-container .inputForm:focus-within {
-    border: 1.5px solid #2d79f3;
-}
-
-.form-container .flex-row {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
-    justify-content: space-between;
-}
-
-.form-container .flex-row > div > label {
-    font-size: 14px;
-    color: black;
-    font-weight: 400;
-}
-
-.form-container .span {
-    font-size: 14px;
-    margin-left: 5px;
+.btn-orange {
+    background-color: orange;
+    border-color: orange;
     color: white;
-    font-weight: 500;
-    cursor: pointer;
 }
 
-.form-container .button-submit {
-    position: relative;
-    display: inline-block;
-    padding: 15px 30px;
-    text-align: center;
-    letter-spacing: 1px;
-    text-decoration: none;
-    background: transparent;
-    transition: ease-out 0.5s;
-    border: 2px solid;
-    border-radius: 10em;
-    box-shadow: inset 0 0 0 0 red;
-    margin: 20px 0 10px 0;
-    color: white;
-    font-size: 15px;
-    font-weight: 500;
-    height: 50px;
-    width: 100%;
-    cursor: pointer;
-}
-
-.form-container .button-submit:hover {
-    color: white;
-    box-shadow: inset 0 -100px 0 0 darkorange;
-}
-
-.form-container .button-submit:active {
-    transform: scale(0.9);
-}
-
-.form-container .p {
-    text-align: center;
-    color: black;
-    font-size: 14px;
-    margin: 5px 0;
-}
-
-.form-container .btn {
-    margin-top: 10px;
-    width: 100%;
-    height: 50px;
-    border-radius: 10em;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: 500;
-    gap: 10px;
-    border: 1px solid #ededef;
-    background-color: white;
-    cursor: pointer;
-    transition: 0.2s ease-in-out;
-}
-
-.form-container .btn:hover {
-    border: 1px solid #2d79f3;
+.btn-orange:hover {
+    background-color: darkorange;
+    border-color: darkorange;
 }
