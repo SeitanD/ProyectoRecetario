@@ -4,8 +4,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
 from django.contrib.auth.models import User
-from .models import Receta, Comentario, Profile, Valoracion
-from .forms import RecetaForm, ComentarioForm, UserRegistroForm, UserUpdateForm, ValoracionForm
+from .models import Receta, Comentario, Profile, Valoracion ,MensajeContacto
+from .forms import RecetaForm, ComentarioForm, UserRegistroForm, UserUpdateForm,ContactForm, ValoracionForm
+
 
 # Vista para la página principal
 def index(request):
@@ -23,9 +24,7 @@ def comida(request):
 def batidos(request):
     return render(request, 'cuentas/batidos.html')
 
-# Vista para la página de contacto
-def contacto(request):
-    return render(request, 'cuentas/contacto.html')
+
 
 # Vista para la página de inicio de sesión
 def login_view(request):
@@ -224,3 +223,15 @@ def eliminar_cuenta(request):
 def custom_logout_view(request):
     logout(request)
     return redirect('login')
+
+def contacto(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'message': 'success'})
+        else:
+            return JsonResponse({'message': 'error', 'errors': form.errors})
+    else:
+        form = ContactForm()
+    return render(request, 'cuentas/contacto.html', {'form': form})

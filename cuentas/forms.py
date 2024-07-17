@@ -1,5 +1,5 @@
 from django import forms  # Importa el módulo de formularios de Django
-from .models import Receta, Comentario, Valoracion  # Importa los modelos Receta, Comentario y Valoracion del archivo models.py
+from .models import Receta, Comentario, MensajeContacto, Valoracion   # Importa los modelos Receta, Comentario y Valoracion del archivo models.py
 from django.contrib.auth.models import User  # Importa el modelo User del módulo de autenticación de Django
 from django.contrib.auth.forms import UserCreationForm  # Importa el formulario de creación de usuarios
 from django.core.exceptions import ValidationError  # Importa la excepción ValidationError para validaciones personalizadas
@@ -64,6 +64,11 @@ class UserUpdateForm(forms.ModelForm):  # Define un formulario para actualizar u
             user.save()  # Guarda el usuario en la base de datos
         return user  # Devuelve el usuario guardado
 
+class ContactForm(forms.ModelForm):
+    class Meta:
+        model = MensajeContacto
+        fields = ['nombre', 'email', 'telefono', 'asunto', 'mensaje']
+
 class ValoracionForm(forms.ModelForm):
     class Meta:
         model = Valoracion
@@ -77,3 +82,4 @@ class ValoracionForm(forms.ModelForm):
                 (5, '5 estrellas'),
             ])
         }
+
