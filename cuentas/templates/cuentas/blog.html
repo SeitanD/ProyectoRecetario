@@ -55,7 +55,7 @@
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <button type="submit" class="btn btn-orange">Filtrar</button>
+                    <button type="submit" class="btn btn-outline-primary btn-orange btn-sm">Filtrar</button>
                 </div>
             </div>
         </form>
@@ -67,64 +67,69 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ receta.titulo }}</h5>
                             <p class="card-text"><small class="text-muted">Autor: {{ receta.autor.username }} | Fecha: {{ receta.fecha_creacion }}</small></p>
-                            <p class="card-text">Ingredientes: {{ receta.ingredientes }}</p>
-                            <p class="card-text">Preparación: {{ receta.preparacion }}</p>
-                            <p class="card-text">Categoría: {{ receta.categoria.nombre }}</p>
-                            <p class="card-text">Valoración: <span id="average-rating-{{ receta.id }}" class="average-rating">{{ receta.valoracion }}</span> estrellas (<span id="total-ratings-{{ receta.id }}" class="total-ratings">{{ receta.total_valoraciones }}</span> valoraciones)</p>
-                            {% if user.is_authenticated %}
-                                <form id="rating-form-{{ receta.id }}" method="post" action="{% url 'add_rating' receta.id %}">
-                                    {% csrf_token %}
-                                    <div class="rating">
-                                        {% for i in "54321" %}
-                                            <input type="radio" id="star-{{ i }}-{{ receta.id }}" name="puntuacion" value="{{ i }}">
-                                            <label for="star-{{ i }}-{{ receta.id }}">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                    <path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
-                                                </svg>
-                                            </label>
-                                        {% endfor %}
-                                    </div>
-                                    <button type="submit" class="btn btn-outline-primary btn-orange btn-sm">Valorar</button>
-                                </form>
-                                <form method="post" action="{% url 'add_to_favorites' receta.id %}" class="mt-2">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-outline-primary btn-orange btn-sm">Añadir a Favoritos</button>
-                                </form>
-                            {% else %}
-                                <p><a href="{% url 'login' %}">Inicia sesión</a> para valorar y añadir a favoritos.</p>
-                            {% endif %}
-                        </div>
-                        <div class="card-footer">
-                            <h6>Comentarios</h6>
-                            {% for comentario in receta.comentarios.all %}
-                                <div class="comentario">
-                                    <p><strong>{{ comentario.autor.username }}</strong>: {{ comentario.texto }}</p>
-                                    {% if comentario.autor == user %}
-                                        <form method="post" action="{% url 'eliminar_comentario' comentario.id %}">
+                            <button class="btn btn-outline-primary btn-orange btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ receta.id }}" aria-expanded="false" aria-controls="collapse{{ receta.id }}">
+                                Ver más
+                            </button>
+                            <div class="collapse" id="collapse{{ receta.id }}">
+                                <p class="card-text">Ingredientes: {{ receta.ingredientes }}</p>
+                                <p class="card-text">Preparación: {{ receta.preparacion }}</p>
+                                <p class="card-text">Categoría: {{ receta.categoria.nombre }}</p>
+                                <p class="card-text">Valoración: <span id="average-rating-{{ receta.id }}" class="average-rating">{{ receta.valoracion }}</span> estrellas (<span id="total-ratings-{{ receta.id }}" class="total-ratings">{{ receta.total_valoraciones }}</span> valoraciones)</p>
+                                {% if user.is_authenticated %}
+                                    <form id="rating-form-{{ receta.id }}" method="post" action="{% url 'add_rating' receta.id %}">
+                                        {% csrf_token %}
+                                        <div class="rating">
+                                            {% for i in "54321" %}
+                                                <input type="radio" id="star-{{ i }}-{{ receta.id }}" name="puntuacion" value="{{ i }}">
+                                                <label for="star-{{ i }}-{{ receta.id }}">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                                        <path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+                                                    </svg>
+                                                </label>
+                                            {% endfor %}
+                                        </div>
+                                        <button type="submit" class="btn btn-outline-primary btn-orange btn-sm">Valorar</button>
+                                    </form>
+                                    <form method="post" action="{% url 'add_to_favorites' receta.id %}" class="mt-2">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-outline-primary btn-orange btn-sm">Añadir a Favoritos</button>
+                                    </form>
+                                {% else %}
+                                    <p><a href="{% url 'login' %}">Inicia sesión</a> para valorar y añadir a favoritos.</p>
+                                {% endif %}
+                                <div class="card-footer">
+                                    <h6>Comentarios</h6>
+                                    {% for comentario in receta.comentarios.all %}
+                                        <div class="comentario">
+                                            <p><strong>{{ comentario.autor.username }}</strong>: {{ comentario.texto }}</p>
+                                            {% if comentario.autor == user %}
+                                                <form method="post" action="{% url 'eliminar_comentario' comentario.id %}">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-danger btn-orange btn-sm">Eliminar</button>
+                                                </form>
+                                                <a href="{% url 'editar_comentario' comentario.id %}" class="btn btn-warning btn-orange btn-sm">Editar</a>
+                                            {% endif %}
+                                        </div>
+                                    {% endfor %}
+                                    {% if user.is_authenticated %}
+                                        <form method="post" action="{% url 'add_comment' receta.id %}">
                                             {% csrf_token %}
-                                            <button type="submit" class="btn btn-danger btn-orange btn-sm">Eliminar</button>
+                                            {{ comentario_form.as_p }}
+                                            <button type="submit" class="btn btn-primary btn-orange btn-sm mt-2">Comentar</button>
                                         </form>
-                                        <a href="{% url 'editar_comentario' comentario.id %}" class="btn btn-warning btn-orange btn-sm">Editar</a>
+                                    {% else %}
+                                        <p><a href="{% url 'login' %}">Inicia sesión</a> para comentar.</p>
                                     {% endif %}
                                 </div>
-                            {% endfor %}
-                            {% if user.is_authenticated %}
-                                <form method="post" action="{% url 'add_comment' receta.id %}">
-                                    {% csrf_token %}
-                                    {{ comentario_form.as_p }}
-                                    <button type="submit" class="btn btn-primary btn-orange btn-sm mt-2">Comentar</button>
-                                </form>
-                            {% else %}
-                                <p><a href="{% url 'login' %}">Inicia sesión</a> para comentar.</p>
-                            {% endif %}
+                                {% if receta.autor == user %}
+                                    <form method="post" action="{% url 'eliminar_receta' receta.id %}" class="mt-2">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger btn-orange btn-sm">Eliminar receta</button>
+                                    </form>
+                                    <a href="{% url 'editar_receta' receta.id %}" class="btn btn-warning btn-orange btn-sm mt-2">Editar</a>
+                                {% endif %}
+                            </div>
                         </div>
-                        {% if receta.autor == user %}
-                            <form method="post" action="{% url 'eliminar_receta' receta.id %}" class="mt-2">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-danger btn-orange btn-sm">Eliminar receta</button>
-                            </form>
-                            <a href="{% url 'editar_receta' receta.id %}" class="btn btn-warning btn-orange btn-sm mt-2">Editar</a>
-                        {% endif %}
                     </div>
                 </div>
             {% endfor %}
@@ -146,10 +151,10 @@
         <form method="post" enctype="multipart/form-data" action="{% url 'crear_categoria' %}">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit" name="crear_receta" class="btn btn-orange">Añadir Categoria</button>
+            <button type="submit" name="crear_categoria" class="btn btn-orange">Añadir Categoria</button>
         </form>
     {% else %}
-        <p><a href="{% url 'login' %}">Inicia sesión</a> para publicar una receta.</p>
+        <p><a href="{% url 'login' %}">Inicia sesión</a> para añadir una categoría.</p>
     {% endif %}
     </main>
 

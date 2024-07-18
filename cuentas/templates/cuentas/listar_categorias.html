@@ -1,12 +1,21 @@
 {% extends "cuentas/base.html" %}
+
+{% block title %}Lista de Categorías - Q'RICO{% endblock %}
+
 {% block content %}
-<h2>Lista de Categorías</h2>
-<ul>
-    {% for categoria in categorias %}
-    <li>
-        {{ categoria.nombre }} - <a href="{% url 'editar_categoria' categoria.id %}">Editar</a> - <a href="{% url 'eliminar_categoria' categoria.id %}">Eliminar</a>
-    </li>
-    {% endfor %}
-</ul>
-<a href="{% url 'crear_categoria' %}">Crear nueva categoría</a>
+<main class="container mt-5">
+    <h2>Lista de Categorías</h2>
+    <ul class="list-group mb-4">
+        {% for categoria in categorias %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            {{ categoria.nombre }}
+            <span>
+                <a href="{% url 'editar_categoria' categoria.id %}" class="btn btn-warning btn-sm btn-orange">Editar</a>
+                <a href="{% url 'eliminar_categoria' categoria.id %}" class="btn btn-danger btn-sm btn-orange">Eliminar</a>
+            </span>
+        </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'crear_categoria' %}" class="btn btn-orange">Crear nueva categoría</a>
+</main>
 {% endblock %}

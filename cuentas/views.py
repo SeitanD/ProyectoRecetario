@@ -289,12 +289,17 @@ def crear_categoria(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Categoría creada con éxito.')
-            return redirect('blog')
+            return redirect('listar_categorias')
         else:
             messages.error(request, 'Error al crear la categoría. Por favor, corrige los errores.')
     else:
         form = CategoriaForm()
     return render(request, 'cuentas/crear_categoria.html', {'form': form})
+
+@login_required
+def listar_categorias(request):
+    categorias = Categoria.objects.all()
+    return render(request, 'cuentas/listar_categorias.html', {'categorias': categorias})
 
 @login_required
 def editar_categoria(request, categoria_id):

@@ -179,3 +179,22 @@ header .contenido-header .social > i {
         fill: var(--fill);
     }
 }
+
+
+.card-text p {
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Número de líneas que se muestran antes de cortar el texto */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.btn-orange {
+    background-color: #FF7F50;
+    color: white;
+}
+
+.btn-orange:hover {
+    background-color: #FF6347;
+    color: white;
+}

@@ -88,4 +88,4 @@ class ValoracionForm(forms.ModelForm):
 class CategoriaForm(forms.ModelForm):
     class Meta:
         model = Categoria
-        fields = ['nombre', 'descripcion']
+        fields = ['nombre']
