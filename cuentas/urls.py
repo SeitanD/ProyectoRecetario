@@ -8,7 +8,6 @@ urlpatterns = [
     path('comida/', cuentas_views.comida, name='comida'),
     path('batidos/', cuentas_views.batidos, name='batidos'),
     path('contacto/', cuentas_views.contacto, name='contacto'),
-    
     path('login/', auth_views.LoginView.as_view(template_name='cuentas/login.html'), name='login'),
     path('registro/', cuentas_views.registro, name='registro'),
     path('olvido_contraseña/', auth_views.PasswordResetView.as_view(template_name='cuentas/olvido_contraseña.html'), name='olvido_contraseña'),
@@ -26,4 +25,14 @@ urlpatterns = [
     path('actualizar_perfil/', cuentas_views.actualizar_perfil, name='actualizar_perfil'),
     path('eliminar_cuenta/', cuentas_views.eliminar_cuenta, name='eliminar_cuenta'),
     path('add_rating/<int:receta_id>/', cuentas_views.add_rating, name='add_rating'),
+    path('listar_valoraciones/<int:receta_id>/', cuentas_views.listar_valoraciones, name='listar_valoraciones'),
+    path('eliminar_valoracion/<int:valoracion_id>/', cuentas_views.eliminar_valoracion, name='eliminar_valoracion'),
+    path('listar_mensajes_contacto/', cuentas_views.listar_mensajes_contacto, name='listar_mensajes_contacto'),
+    path('eliminar_mensaje_contacto/<int:mensaje_id>/', cuentas_views.eliminar_mensaje_contacto, name='eliminar_mensaje_contacto'),
+
+    path('categorias/', cuentas_views.listar_categorias, name='listar_categorias'),
+    path('crear_categoria/', cuentas_views.crear_categoria, name='crear_categoria'),
+    path('editar_categoria/<int:categoria_id>/', cuentas_views.editar_categoria, name='editar_categoria'),
+    path('eliminar_categoria/<int:categoria_id>/', cuentas_views.eliminar_categoria, name='eliminar_categoria'),
+
 ]

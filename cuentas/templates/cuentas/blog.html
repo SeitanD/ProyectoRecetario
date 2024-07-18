@@ -6,12 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Q'RICO</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="{% static 'cuentas/css/blog.css' %}">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha384-KyZXEAg3QhqLMpG8r+Knujsl5+5hb7O2l7e/Dc3V/J4G/ZR5gE5ydz7FAW8cfQ/9" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <section id="inicio">
@@ -44,6 +44,21 @@
 
     <main class="container mt-5">
         <h2>Recetas</h2>
+        <form method="get" action="{% url 'blog' %}" class="mb-4">
+            <div class="row">
+                <div class="col-md-3">
+                    <select name="categoria" class="form-control">
+                        <option value="">Todas las Categorías</option>
+                        {% for categoria in categorias %}
+                            <option value="{{ categoria.id }}" {% if request.GET.categoria == categoria.id|stringformat:"s" %}selected{% endif %}>{{ categoria.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-orange">Filtrar</button>
+                </div>
+            </div>
+        </form>
         <div class="row">
             {% for receta in recetas %}
                 <div class="col-md-4">
@@ -54,15 +69,23 @@
                             <p class="card-text"><small class="text-muted">Autor: {{ receta.autor.username }} | Fecha: {{ receta.fecha_creacion }}</small></p>
                             <p class="card-text">Ingredientes: {{ receta.ingredientes }}</p>
                             <p class="card-text">Preparación: {{ receta.preparacion }}</p>
-                            <p class="card-text">Valoración: <span class="average-rating">{{ receta.valoracion }}</span> estrellas (<span class="total-ratings">{{ receta.total_valoraciones }}</span> valoraciones)</p>
+                            <p class="card-text">Categoría: {{ receta.categoria.nombre }}</p>
+                            <p class="card-text">Valoración: <span id="average-rating-{{ receta.id }}" class="average-rating">{{ receta.valoracion }}</span> estrellas (<span id="total-ratings-{{ receta.id }}" class="total-ratings">{{ receta.total_valoraciones }}</span> valoraciones)</p>
                             {% if user.is_authenticated %}
-                                <div class="rating">
-                                    <input type="radio" id="star-1-{{ receta.id }}" name="rating-{{ receta.id }}" value="1"><label for="star-1-{{ receta.id }}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path></svg></label>
-                                    <input type="radio" id="star-2-{{ receta.id }}" name="rating-{{ receta.id }}" value="2"><label for="star-2-{{ receta.id }}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path></svg></label>
-                                    <input type="radio" id="star-3-{{ receta.id }}" name="rating-{{ receta.id }}" value="3"><label for="star-3-{{ receta.id }}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path></svg></label>
-                                    <input type="radio" id="star-4-{{ receta.id }}" name="rating-{{ receta.id }}" value="4"><label for="star-4-{{ receta.id }}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path></svg></label>
-                                    <input type="radio" id="star-5-{{ receta.id }}" name="rating-{{ receta.id }}" value="5"><label for="star-5-{{ receta.id }}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path></svg></label>
-                                </div>
+                                <form id="rating-form-{{ receta.id }}" method="post" action="{% url 'add_rating' receta.id %}">
+                                    {% csrf_token %}
+                                    <div class="rating">
+                                        {% for i in "54321" %}
+                                            <input type="radio" id="star-{{ i }}-{{ receta.id }}" name="puntuacion" value="{{ i }}">
+                                            <label for="star-{{ i }}-{{ receta.id }}">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                                    <path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+                                                </svg>
+                                            </label>
+                                        {% endfor %}
+                                    </div>
+                                    <button type="submit" class="btn btn-outline-primary btn-orange btn-sm">Valorar</button>
+                                </form>
                                 <form method="post" action="{% url 'add_to_favorites' receta.id %}" class="mt-2">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-outline-primary btn-orange btn-sm">Añadir a Favoritos</button>
@@ -117,25 +140,42 @@
         {% else %}
             <p><a href="{% url 'login' %}">Inicia sesión</a> para publicar una receta.</p>
         {% endif %}
+
+        {% if user.is_authenticated %}
+        <h2 class="mt-5">Añadir Categoria</h2>
+        <form method="post" enctype="multipart/form-data" action="{% url 'crear_categoria' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" name="crear_receta" class="btn btn-orange">Añadir Categoria</button>
+        </form>
+    {% else %}
+        <p><a href="{% url 'login' %}">Inicia sesión</a> para publicar una receta.</p>
+    {% endif %}
     </main>
 
-    <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
-    <script src="{% static 'cuentas/js/script.js' %}"></script>
     <script>
         $(document).ready(function() {
             $('.rating input').on('click', function() {
-                var recetaId = $(this).attr('name').split('-')[1];
+                var recetaId = $(this).closest('form').attr('id').split('-')[2];
                 var puntuacion = $(this).val();
+                $('#rating-form-' + recetaId + ' input[name="puntuacion"]').val(puntuacion);
+            });
+
+            $('.rating button').on('click', function(event) {
+                event.preventDefault();
+                var form = $(this).closest('form');
+                var recetaId = form.attr('id').split('-')[2];
+                var puntuacion = form.find('input[name="puntuacion"]:checked').val();
                 $.ajax({
-                    url: '/add_rating/' + recetaId + '/',
+                    url: form.attr('action'),
                     type: 'POST',
                     data: {
                         'puntuacion': puntuacion,
-                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                        'csrfmiddlewaretoken': form.find('input[name="csrfmiddlewaretoken"]').val()
                     },
                     success: function(response) {
-                        $('.average-rating').text(response.new_rating);
-                        $('.total-ratings').text(response.total_ratings);
+                        $('#average-rating-' + recetaId).text(response.new_rating.toFixed(1));
+                        $('#total-ratings-' + recetaId).text(response.total_ratings);
                     },
                     error: function(response) {
                         alert('Error al enviar la valoración');
@@ -144,5 +184,8 @@
             });
         });
     </script>
+    
+    <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
+    <script src="{% static 'cuentas/js/script.js' %}"></script>
 </body>
 </html>

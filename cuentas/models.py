@@ -1,7 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+
+class Categoria(models.Model):
+    nombre = models.CharField(max_length=100)
+    descripcion = models.TextField()
+
+    def __str__(self):
+        return self.nombre
 
 class Receta(models.Model):
     titulo = models.CharField(max_length=100, default='Título de la receta')
@@ -12,15 +20,19 @@ class Receta(models.Model):
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     valoracion = models.FloatField(default=0.0)
     total_valoraciones = models.IntegerField(default=0)
+    categoria = models.ForeignKey(Categoria, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.titulo
-    
-class Valoracion(models.Model):
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
-    receta = models.ForeignKey(Receta, on_delete=models.CASCADE, related_name='valoraciones')
-    puntuacion = models.IntegerField()
 
+class Valoracion(models.Model):
+    receta = models.ForeignKey(Receta, related_name='valoraciones', on_delete=models.CASCADE)
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    puntuacion = models.PositiveSmallIntegerField()
+    fecha = models.DateTimeField(auto_now_add=True)  # Sin default
+
+    class Meta:
+        unique_together = ('receta', 'usuario')
 
 class Comentario(models.Model):
     receta = models.ForeignKey(Receta, related_name='comentarios', on_delete=models.CASCADE)

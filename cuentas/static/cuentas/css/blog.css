@@ -91,7 +91,7 @@ header .contenido-header .social > i {
 .btn-orange {
     background-color: orange;
     border-color: orange;
-    color: white;
+    color: rgb(255, 115, 0);
 }
 
 /* Estilos para las valoraciones */

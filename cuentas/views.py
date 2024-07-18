@@ -3,10 +3,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
-from django.contrib.auth.models import User
-from .models import Receta, Comentario, Profile, Valoracion ,MensajeContacto
-from .forms import RecetaForm, ComentarioForm, UserRegistroForm, UserUpdateForm,ContactForm, ValoracionForm
-
+from django.contrib.auth.models import User, Group
+from .models import Receta, Comentario, Profile, Valoracion, MensajeContacto, Categoria
+from .forms import RecetaForm, ComentarioForm, UserRegistroForm, UserUpdateForm, ContactForm, ValoracionForm, CategoriaForm
+from django.db import models
 
 # Vista para la página principal
 def index(request):
@@ -24,8 +24,6 @@ def comida(request):
 def batidos(request):
     return render(request, 'cuentas/batidos.html')
 
-
-
 # Vista para la página de inicio de sesión
 def login_view(request):
     return render(request, 'cuentas/login.html')
@@ -37,6 +35,8 @@ def registro(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
+            user_group = Group.objects.get(name='User')
+            user.groups.add(user_group)
             messages.success(request, '¡Registro exitoso! Ahora estás logueado.')
             return redirect('index')
         else:
@@ -45,14 +45,21 @@ def registro(request):
         form = UserRegistroForm()
     return render(request, 'cuentas/registro.html', {'form': form})
 
-# Vista para mostrar el blog
 def blog(request):
-    recetas = Receta.objects.all()
+    categoria_id = request.GET.get('categoria')
+    if categoria_id:
+        recetas = Receta.objects.filter(categoria_id=categoria_id)
+    else:
+        recetas = Receta.objects.all()
+    categorias = Categoria.objects.all()
+    comentario_form = ComentarioForm()
+    
     context = {
         'recetas': recetas,
-        'comentario_form': ComentarioForm(),
-        'valoracion_form': ValoracionForm(),
+        'categorias': categorias,
+        'comentario_form': comentario_form
     }
+    
     return render(request, 'cuentas/blog.html', context)
 
 # Vista para publicar recetas (requiere autenticación)
@@ -88,30 +95,48 @@ def add_comment(request, receta_id):
             messages.error(request, 'Error al agregar el comentario. Por favor, corrige los errores.')
     return redirect('blog')
 
-# Vista para agregar valoración (requiere autenticación)
 @login_required
 def add_rating(request, receta_id):
+    receta = get_object_or_404(Receta, id=receta_id)
     if request.method == 'POST':
-        puntuacion = int(request.POST.get('puntuacion'))
-        receta = get_object_or_404(Receta, id=receta_id)
+        form = ValoracionForm(request.POST)
+        if form.is_valid():
+            puntuacion = form.cleaned_data['puntuacion']
+            valoracion, created = Valoracion.objects.update_or_create(
+                receta=receta,
+                usuario=request.user,
+                defaults={'puntuacion': puntuacion},
+            )
+            nueva_valoracion = receta.valoraciones.aggregate(models.Avg('puntuacion'))['puntuacion__avg']
+            total_valoraciones = receta.valoraciones.count()
+            receta.valoracion = nueva_valoracion
+            receta.total_valoraciones = total_valoraciones
+            receta.save()
+            return JsonResponse({
+                'new_rating': nueva_valoracion,
+                'total_ratings': total_valoraciones
+            })
+        else:
+            return JsonResponse({'error': 'Formulario no válido'}, status=400)
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
 
-        # Crear o actualizar la valoración del usuario
-        valoracion, created = Valoracion.objects.update_or_create(
-            usuario=request.user, receta=receta,
-            defaults={'puntuacion': puntuacion}
-        )
+# Vista para listar valoraciones de una receta
+@login_required
+def listar_valoraciones(request, receta_id):
+    receta = get_object_or_404(Receta, id=receta_id)
+    valoraciones = Valoracion.objects.filter(receta=receta)
+    return render(request, 'cuentas/listar_valoraciones.html', {'receta': receta, 'valoraciones': valoraciones})
 
-        # Recalcular la valoración promedio de la receta
-        all_ratings = Valoracion.objects.filter(receta=receta)
-        total_rating = sum(r.puntuacion for r in all_ratings)
-        average_rating = total_rating / all_ratings.count()
-
-        receta.valoracion = average_rating
-        receta.total_valoraciones = all_ratings.count()
-        receta.save()
-
-        return JsonResponse({'success': True, 'new_rating': average_rating, 'total_ratings': all_ratings.count()})
-    return JsonResponse({'success': False}, status=400)
+# Vista para eliminar una valoración
+@login_required
+def eliminar_valoracion(request, valoracion_id):
+    valoracion = get_object_or_404(Valoracion, id=valoracion_id)
+    if valoracion.usuario == request.user:
+        valoracion.delete()
+        messages.success(request, 'Valoración eliminada con éxito.')
+    else:
+        messages.error(request, 'No tienes permiso para eliminar esta valoración.')
+    return redirect('blog')
 
 # Vista para eliminar una receta
 @login_required
@@ -224,6 +249,7 @@ def custom_logout_view(request):
     logout(request)
     return redirect('login')
 
+# Vista para manejar mensajes de contacto
 def contacto(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
@@ -235,3 +261,57 @@ def contacto(request):
     else:
         form = ContactForm()
     return render(request, 'cuentas/contacto.html', {'form': form})
+
+# Vista para listar mensajes de contacto
+@login_required
+def listar_mensajes_contacto(request):
+    mensajes = MensajeContacto.objects.all()
+    return render(request, 'cuentas/listar_mensajes_contacto.html', {'mensajes': mensajes})
+
+# Vista para eliminar mensaje de contacto
+@login_required
+def eliminar_mensaje_contacto(request, mensaje_id):
+    mensaje = get_object_or_404(MensajeContacto, id=mensaje_id)
+    if request.method == "POST":
+        mensaje.delete()
+        messages.success(request, 'Mensaje de contacto eliminado con éxito.')
+    return redirect('listar_mensajes_contacto')
+
+@login_required
+def listar_categorias(request):
+    categorias = Categoria.objects.all()
+    return render(request, 'cuentas/listar_categorias.html', {'categorias': categorias})
+
+@login_required
+def crear_categoria(request):
+    if request.method == 'POST':
+        form = CategoriaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Categoría creada con éxito.')
+            return redirect('blog')
+        else:
+            messages.error(request, 'Error al crear la categoría. Por favor, corrige los errores.')
+    else:
+        form = CategoriaForm()
+    return render(request, 'cuentas/crear_categoria.html', {'form': form})
+
+@login_required
+def editar_categoria(request, categoria_id):
+    categoria = get_object_or_404(Categoria, id=categoria_id)
+    if request.method == 'POST':
+        form = CategoriaForm(request.POST, instance=categoria)
+        if form.is_valid():
+            form.save()
+            messages.success(request, '¡Categoría actualizada exitosamente!')
+            return redirect('listar_categorias')
+    else:
+        form = CategoriaForm(instance=categoria)
+    return render(request, 'cuentas/editar_categoria.html', {'form': form})
+
+@login_required
+def eliminar_categoria(request, categoria_id):
+    categoria = get_object_or_404(Categoria, id=categoria_id)
+    categoria.delete()
+    messages.success(request, '¡Categoría eliminada exitosamente!')
+    return redirect('listar_categorias')
