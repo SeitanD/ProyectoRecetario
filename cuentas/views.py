@@ -4,12 +4,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
 from django.contrib.auth.models import User, Group
-from .models import Receta, Comentario, Profile, Valoracion, MensajeContacto, Categoria
-from .forms import RecetaForm, ComentarioForm, UserRegistroForm, UserUpdateForm, ContactForm, ValoracionForm, CategoriaForm
+from .models import Receta, Comentario, Profile, Valoracion, MensajeContacto, Categoria, Carrito, CarritoItem, Producto
+from .forms import RecetaForm, ComentarioForm, UserRegistroForm, UserUpdateForm, ContactForm, ValoracionForm, CategoriaForm, CarritoItemForm, ProductoForm
 from django.db import models
 from django.views.decorators.csrf import csrf_exempt
-
-
 
 # Vista para la página principal
 def index(request):
@@ -253,7 +251,6 @@ def custom_logout_view(request):
     return redirect('login')
 
 # Vista para manejar mensajes de contacto
-
 @csrf_exempt
 def contacto(request):
     if request.method == 'POST':
@@ -302,11 +299,6 @@ def crear_categoria(request):
     return render(request, 'cuentas/crear_categoria.html', {'form': form})
 
 @login_required
-def listar_categorias(request):
-    categorias = Categoria.objects.all()
-    return render(request, 'cuentas/listar_categorias.html', {'categorias': categorias})
-
-@login_required
 def editar_categoria(request, categoria_id):
     categoria = get_object_or_404(Categoria, id=categoria_id)
     if request.method == 'POST':
@@ -325,3 +317,82 @@ def eliminar_categoria(request, categoria_id):
     categoria.delete()
     messages.success(request, '¡Categoría eliminada exitosamente!')
     return redirect('listar_categorias')
+
+@login_required
+def tienda(request):
+    productos = Producto.objects.all()
+    return render(request, 'cuentas/tienda.html', {'productos': productos})
+
+@login_required
+def ver_carrito(request):
+    carrito, created = Carrito.objects.get_or_create(usuario=request.user)
+    return render(request, 'cuentas/ver_carrito.html', {'carrito': carrito})
+
+@login_required
+def agregar_al_carrito(request, producto_id):
+    producto = get_object_or_404(Producto, id=producto_id)
+    carrito, created = Carrito.objects.get_or_create(usuario=request.user)
+    item, created = CarritoItem.objects.get_or_create(carrito=carrito, producto=producto)
+    if not created:
+        item.cantidad += 1
+        item.save()
+    messages.success(request, 'Producto agregado al carrito con éxito.')
+    return redirect('ver_carrito')
+
+@login_required
+def actualizar_carrito(request, item_id):
+    item = get_object_or_404(CarritoItem, id=item_id)
+    if request.method == 'POST':
+        form = CarritoItemForm(request.POST, instance=item)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Cantidad actualizada con éxito.')
+            return redirect('ver_carrito')
+    else:
+        form = CarritoItemForm(instance=item)
+    return render(request, 'cuentas/actualizar_carrito.html', {'form': form})
+
+@login_required
+def eliminar_del_carrito(request, item_id):
+    item = get_object_or_404(CarritoItem, id=item_id)
+    item.delete()
+    messages.success(request, 'Producto eliminado del carrito con éxito.')
+    return redirect('ver_carrito')
+
+@login_required
+def crear_producto(request):
+    if request.method == 'POST':
+        form = ProductoForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Producto creado con éxito.')
+            return redirect('tienda')
+        else:
+            messages.error(request, 'Error al crear el producto. Por favor, corrige los errores.')
+    else:
+        form = ProductoForm()
+    return render(request, 'cuentas/crear_producto.html', {'form': form})
+
+@login_required
+def editar_producto(request, producto_id):
+    producto = get_object_or_404(Producto, id=producto_id)
+    if request.method == 'POST':
+        form = ProductoForm(request.POST, request.FILES, instance=producto)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Producto actualizado con éxito.')
+            return redirect('tienda')
+        else:
+            messages.error(request, 'Error al actualizar el producto. Por favor, corrige los errores.')
+    else:
+        form = ProductoForm(instance=producto)
+    return render(request, 'cuentas/editar_producto.html', {'form': form})
+
+@login_required
+def eliminar_producto(request, producto_id):
+    producto = get_object_or_404(Producto, id=producto_id)
+    if request.method == 'POST':
+        producto.delete()
+        messages.success(request, 'Producto eliminado con éxito.')
+        return redirect('tienda')
+    return render(request, 'cuentas/confirmar_eliminar.html', {'producto': producto})

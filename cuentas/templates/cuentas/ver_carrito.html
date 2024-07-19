@@ -1,0 +1,18 @@
+{% extends "cuentas/base.html" %}
+{% block content %}
+<h2>Carrito de Compras</h2>
+{% if carrito.items.count > 0 %}
+<ul>
+    {% for item in carrito.items.all %}
+    <li>
+        {{ item.receta.titulo }} - {{ item.cantidad }}
+        <a href="{% url 'actualizar_carrito' item.id %}">Actualizar</a>
+        <a href="{% url 'eliminar_del_carrito' item.id %}">Eliminar</a>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>Tu carrito está vacío.</p>
+{% endif %}
+<a href="{% url 'tienda' %}" class="btn btn-primary">Seguir comprando</a>
+{% endblock %}
