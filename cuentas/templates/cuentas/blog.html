@@ -137,26 +137,34 @@
         </div>
 
         {% if user.is_authenticated %}
-            <h2 class="mt-5">Añadir nueva receta</h2>
-            <form method="post" enctype="multipart/form-data" action="{% url 'publicar_receta' %}">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" name="crear_receta" class="btn btn-orange">Añadir receta</button>
-            </form>
+            {% if perms.cuentas.add_receta %}
+                <h2 class="mt-5">Añadir nueva receta</h2>
+                <form method="post" enctype="multipart/form-data" action="{% url 'publicar_receta' %}">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" name="crear_receta" class="btn btn-orange">Añadir receta</button>
+                </form>
+            {% else %}
+                <p>No tienes permiso para añadir recetas.</p>
+            {% endif %}
         {% else %}
             <p><a href="{% url 'login' %}">Inicia sesión</a> para publicar una receta.</p>
         {% endif %}
 
         {% if user.is_authenticated %}
-        <h2 class="mt-5">Añadir Categoria</h2>
-        <form method="post" enctype="multipart/form-data" action="{% url 'crear_categoria' %}">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" name="crear_categoria" class="btn btn-orange">Añadir Categoria</button>
-        </form>
-    {% else %}
-        <p><a href="{% url 'login' %}">Inicia sesión</a> para añadir una categoría.</p>
-    {% endif %}
+            {% if perms.cuentas.add_categoria %}
+                <h2 class="mt-5">Añadir Categoria</h2>
+                <form method="post" enctype="multipart/form-data" action="{% url 'crear_categoria' %}">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" name="crear_categoria" class="btn btn-orange">Añadir Categoria</button>
+                </form>
+            {% else %}
+                <p>No tienes permiso para añadir categorías.</p>
+            {% endif %}
+        {% else %}
+            <p><a href="{% url 'login' %}">Inicia sesión</a> para añadir una categoría.</p>
+        {% endif %}
     </main>
 
     <script>

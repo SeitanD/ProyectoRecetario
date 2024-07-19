@@ -13,7 +13,7 @@
             {% for valoracion in valoraciones %}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     {{ valoracion.usuario.username }}: {{ valoracion.puntuacion }}
-                    {% if valoracion.usuario == user %}
+                    {% if valoracion.usuario == user or perms.cuentas.delete_valoracion %}
                         <form method="post" action="{% url 'eliminar_valoracion' valoracion.id %}" class="ms-3">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>

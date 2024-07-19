@@ -12,28 +12,33 @@
                     <form method="post" class="mx-auto">
                         {% csrf_token %}
                         <div class="mb-3">
-                            <i class="fa-solid fa-user"></i>
-                            <label for="id_username">Nombre de usuario:</label>
+                            <label for="id_username" class="form-label">
+                                <i class="fa-solid fa-user"></i> Nombre de usuario:
+                            </label>
                             {{ form.username }}
                         </div>
                         <div class="mb-3">
-                            <i class="fa-solid fa-envelope"></i>
-                            <label for="id_email">Correo electrónico:</label>
+                            <label for="id_email" class="form-label">
+                                <i class="fa-solid fa-envelope"></i> Correo electrónico:
+                            </label>
                             {{ form.email }}
                         </div>
                         <div class="mb-3">
-                            <i class="fa-solid fa-envelope"></i>
-                            <label for="id_email_confirm">Confirmar correo electrónico:</label>
+                            <label for="id_email_confirm" class="form-label">
+                                <i class="fa-solid fa-envelope"></i> Confirmar correo electrónico:
+                            </label>
                             {{ form.email_confirm }}
                         </div>
                         <div class="mb-3">
-                            <i class="fa-solid fa-lock"></i>
-                            <label for="id_password1">Contraseña:</label>
+                            <label for="id_password1" class="form-label">
+                                <i class="fa-solid fa-lock"></i> Contraseña:
+                            </label>
                             {{ form.password1 }}
                         </div>
                         <div class="mb-3">
-                            <i class="fa-solid fa-lock"></i>
-                            <label for="id_password2">Confirmar contraseña:</label>
+                            <label for="id_password2" class="form-label">
+                                <i class="fa-solid fa-lock"></i> Confirmar contraseña:
+                            </label>
                             {{ form.password2 }}
                         </div>
                         <button type="submit" class="btn btn-orange mt-3 w-100">Registrarse</button>

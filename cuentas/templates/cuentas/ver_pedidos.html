@@ -19,15 +19,19 @@
                 <td>{{ item.producto.nombre }}</td>
                 <td>{{ item.cantidad }}</td>
                 <td>
+                    {% if perms.cuentas.change_carrito %}
                     <form method="post" action="{% url 'actualizar_carrito' item.id %}" style="display:inline-block;">
                         {% csrf_token %}
                         <input type="number" name="cantidad" value="{{ item.cantidad }}" min="1" class="form-control d-inline-block w-auto">
                         <button type="submit" class="btn btn-orange">Actualizar</button>
                     </form>
+                    {% endif %}
+                    {% if perms.cuentas.delete_carrito %}
                     <form method="post" action="{% url 'eliminar_del_carrito' item.id %}" style="display:inline-block;">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-danger">Eliminar</button>
                     </form>
+                    {% endif %}
                 </td>
             </tr>
             {% endfor %}

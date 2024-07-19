@@ -19,72 +19,31 @@
             <nav id="nav">
                 <ul>
                     <!-- Enlaces de navegación -->
-                    <li>
-                        <a href="{% url 'index' %}">
-                            <i class="fa-solid fa-house"></i>
-                            <span>Inicio</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'aperitivos' %}">
-                            <i class="fa-solid fa-ice-cream"></i>
-                            <span>Aperitivos</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'comida' %}">
-                            <i class="fa-solid fa-utensils"></i>
-                            <span>Comidas</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'batidos' %}">
-                            <i class="fa-solid fa-glass-water"></i>
-                            <span>Refrescos</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'contacto' %}">
-                            <i class="fa-solid fa-comments"></i>
-                            <span>Contacto</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'blog' %}">
-                            <i class="fa-solid fa-blog"></i>
-                            <span>Blog</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'perfil' %}">
-                            <i class="fa-solid fa-user"></i>
-                            <span>Perfil</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'tienda' %}">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                            <span>Tienda</span>
-                        </a>
-                    </li>
+                    <li><a href="{% url 'index' %}"><i class="fa-solid fa-house"></i><span>Inicio</span></a></li>
+                    <li><a href="{% url 'aperitivos' %}"><i class="fa-solid fa-ice-cream"></i><span>Aperitivos</span></a></li>
+                    <li><a href="{% url 'comida' %}"><i class="fa-solid fa-utensils"></i><span>Comidas</span></a></li>
+                    <li><a href="{% url 'batidos' %}"><i class="fa-solid fa-glass-water"></i><span>Refrescos</span></a></li>
+                    <li><a href="{% url 'contacto' %}"><i class="fa-solid fa-comments"></i><span>Contacto</span></a></li>
+                    <li><a href="{% url 'blog' %}"><i class="fa-solid fa-blog"></i><span>Blog</span></a></li>
+                    <li><a href="{% url 'perfil' %}"><i class="fa-solid fa-user"></i><span>Perfil</span></a></li>
+                    <li><a href="{% url 'tienda' %}"><i class="fa-solid fa-cart-shopping"></i><span>Tienda</span></a></li>
                 </ul>
             </nav>
             <div class="social">
                 {% if user.is_authenticated %}
-                <a href="{% url 'logout' %}" class="btn btn-orange">Cerrar Sesión <i class="fa-solid fa-user"></i></a>
-            {% else %}
-                <a href="{% url 'login' %}" class="btn btn-orange">Iniciar Sesión <i class="fa-solid fa-user"></i></a>
-            {% endif %}
-        </div>
-        <div class="nav-responsive" id="bar" onclick="mostrarOcultarMenu()">
-            <i class="fa-solid fa-bars"></i>
-        </div>
-
+                    <a href="{% url 'logout' %}" class="btn btn-orange">Cerrar Sesión <i class="fa-solid fa-user"></i></a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-orange">Iniciar Sesión <i class="fa-solid fa-user"></i></a>
+                {% endif %}
+            </div>
+            <div class="nav-responsive" id="bar" onclick="mostrarOcultarMenu()">
+                <i class="fa-solid fa-bars"></i>
+            </div>
         </div>
     </header>    
     <main class="container mt-4">
         <h2>Perfil del Usuario</h2>
-        <div class="card">
+        <div class="card mb-4">
             <div class="card-body">
                 <h5 class="card-title">Información del Usuario</h5>
                 <p class="card-text"><strong>Nombre de usuario:</strong> {{ user.username }}</p>

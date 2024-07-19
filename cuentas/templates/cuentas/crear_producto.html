@@ -4,11 +4,15 @@
     <div class="row justify-content-center">
         <div class="col-md-6">
             <h2>Crear Producto</h2>
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" class="btn btn-orange">Crear</button>
-            </form>
+            {% if perms.cuentas.add_producto %}
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-orange">Crear</button>
+                </form>
+            {% else %}
+                <p>No tienes permiso para crear productos.</p>
+            {% endif %}
         </div>
     </div>
 </div>

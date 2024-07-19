@@ -5,10 +5,14 @@
 {% block content %}
 <div class="container mt-5">
     <h2>Editar Comentario</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-    </form>
+    {% if perms.cuentas.change_comment %}
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        </form>
+    {% else %}
+        <p>No tienes permiso para editar comentarios.</p>
+    {% endif %}
 </div>
 {% endblock %}
