@@ -1,5 +1,5 @@
 from django import forms
-from .models import Receta, Categoria, Comentario, MensajeContacto, CarritoItem, Producto, Valoracion
+from .models import Receta, Categoria, Comentario, MensajeContacto, ProductoItem, Producto, Valoracion
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
@@ -89,9 +89,9 @@ class CategoriaForm(forms.ModelForm):
         model = Categoria
         fields = ['nombre']
 
-class CarritoItemForm(forms.ModelForm):
+class ProductoItemForm(forms.ModelForm):
     class Meta:
-        model = CarritoItem
+        model = ProductoItem
         fields = ['producto', 'cantidad']
         widgets = {
             'producto': forms.Select(attrs={'class': 'form-control'}),

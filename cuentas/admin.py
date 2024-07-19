@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Receta, Comentario, Profile, Valoracion, MensajeContacto, Categoria
+from .models import Receta, Comentario, Profile, Valoracion, MensajeContacto, Categoria, Producto, Carrito, ProductoItem
 
 @admin.register(Receta)
 class RecetaAdmin(admin.ModelAdmin):
@@ -35,3 +35,20 @@ class MensajeContactoAdmin(admin.ModelAdmin):
 class CategoriaAdmin(admin.ModelAdmin):
     list_display = ('nombre',)
     search_fields = ('nombre',)
+
+@admin.register(Producto)
+class ProductoAdmin(admin.ModelAdmin):
+    list_display = ('nombre', 'precio', 'fecha_creacion')
+    search_fields = ('nombre',)
+    list_filter = ('fecha_creacion',)
+
+@admin.register(Carrito)
+class CarritoAdmin(admin.ModelAdmin):
+    list_display = ('usuario', 'creado_en')
+    search_fields = ('usuario__username',)
+    list_filter = ('creado_en',)
+
+@admin.register(ProductoItem)
+class ProductoItemAdmin(admin.ModelAdmin):
+    list_display = ('carrito', 'producto', 'cantidad')
+    search_fields = ('carrito__usuario__username', 'producto__nombre')

@@ -33,10 +33,7 @@
             {% endfor %}
         </tbody>
     </table>
-    <form method="post" action="{% url 'validar_pedido' %}">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-orange">Validar Pedido</button>
-    </form>
+    <a href="{% url 'validar_pedido' %}" class="btn btn-orange">Validar Pedido</a>
     <a href="{% url 'tienda' %}" class="btn btn-orange">Seguir comprando</a>
     {% else %}
     <p>Tu carrito está vacío.</p>

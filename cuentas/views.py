@@ -4,8 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
 from django.contrib.auth.models import User, Group
-from .models import Receta, Comentario, Profile, Valoracion, MensajeContacto, Categoria, Carrito, CarritoItem, Producto
-from .forms import RecetaForm, ComentarioForm, UserRegistroForm, UserUpdateForm, ContactForm, ValoracionForm, CategoriaForm, CarritoItemForm, ProductoForm
+from .models import Receta, Comentario, Profile, Valoracion, MensajeContacto, Categoria, Carrito, ProductoItem, Producto, Pedido
+from .forms import RecetaForm, ComentarioForm, UserRegistroForm, UserUpdateForm, ContactForm, ValoracionForm, CategoriaForm, ProductoItemForm, ProductoForm
 from django.db import models
 from django.views.decorators.csrf import csrf_exempt
 
@@ -323,6 +323,7 @@ def tienda(request):
     productos = Producto.objects.all()
     return render(request, 'cuentas/tienda.html', {'productos': productos})
 
+
 @login_required
 def ver_carrito(request):
     carrito, created = Carrito.objects.get_or_create(usuario=request.user)
@@ -332,29 +333,46 @@ def ver_carrito(request):
 def agregar_al_carrito(request, producto_id):
     producto = get_object_or_404(Producto, id=producto_id)
     carrito, created = Carrito.objects.get_or_create(usuario=request.user)
-    item, created = CarritoItem.objects.get_or_create(carrito=carrito, producto=producto)
-    if not created:
-        item.cantidad += 1
-        item.save()
+    cantidad = int(request.POST.get('cantidad', 1))
+    item, created = ProductoItem.objects.get_or_create(carrito=carrito, producto=producto)
+    item.cantidad += cantidad
+    item.save()
     messages.success(request, 'Producto agregado al carrito con éxito.')
     return redirect('ver_carrito')
 
 @login_required
-def actualizar_carrito(request, item_id):
-    item = get_object_or_404(CarritoItem, id=item_id)
+def validar_pedido(request):
+    carrito, created = Carrito.objects.get_or_create(usuario=request.user)
     if request.method == 'POST':
-        form = CarritoItemForm(request.POST, instance=item)
+        for item in carrito.items.all():
+            Pedido.objects.create(usuario=request.user, producto=item.producto, cantidad=item.cantidad)
+        carrito.items.all().delete()  # Vaciar el carrito después de realizar el pedido
+        messages.success(request, 'Pedido realizado con éxito.')
+        return redirect('ver_pedidos')
+    return redirect('carrito')
+
+
+@login_required
+def ver_pedidos(request):
+    pedidos = Pedido.objects.filter(usuario=request.user).order_by('-fecha_pedido')
+    return render(request, 'cuentas/ver_pedidos.html', {'pedidos': pedidos})
+
+@login_required
+def actualizar_carrito(request, item_id):
+    item = get_object_or_404(ProductoItem, id=item_id)
+    if request.method == 'POST':
+        form = ProductoItemForm(request.POST, instance=item)
         if form.is_valid():
             form.save()
             messages.success(request, 'Cantidad actualizada con éxito.')
             return redirect('ver_carrito')
     else:
-        form = CarritoItemForm(instance=item)
+        form = ProductoItemForm(instance=item)
     return render(request, 'cuentas/actualizar_carrito.html', {'form': form})
 
 @login_required
 def eliminar_del_carrito(request, item_id):
-    item = get_object_or_404(CarritoItem, id=item_id)
+    item = get_object_or_404(ProductoItem, id=item_id)
     item.delete()
     messages.success(request, 'Producto eliminado del carrito con éxito.')
     return redirect('ver_carrito')

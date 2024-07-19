@@ -29,7 +29,6 @@ urlpatterns = [
     path('eliminar_valoracion/<int:valoracion_id>/', views.eliminar_valoracion, name='eliminar_valoracion'),
     path('listar_mensajes_contacto/', views.listar_mensajes_contacto, name='listar_mensajes_contacto'),
     path('eliminar_mensaje_contacto/<int:mensaje_id>/', views.eliminar_mensaje_contacto, name='eliminar_mensaje_contacto'),
-
     path('categorias/', views.listar_categorias, name='listar_categorias'),
     path('crear_categoria/', views.crear_categoria, name='crear_categoria'),
     path('editar_categoria/<int:categoria_id>/', views.editar_categoria, name='editar_categoria'),
@@ -44,5 +43,6 @@ urlpatterns = [
     path('carrito/agregar/<int:producto_id>/', views.agregar_al_carrito, name='agregar_al_carrito'),
     path('carrito/actualizar/<int:item_id>/', views.actualizar_carrito, name='actualizar_carrito'),
     path('carrito/eliminar/<int:item_id>/', views.eliminar_del_carrito, name='eliminar_del_carrito'),
+    path('carrito/validar/', views.validar_pedido, name='validar_pedido'),
+    path('pedidos/', views.ver_pedidos, name='ver_pedidos'),
 ]
-
