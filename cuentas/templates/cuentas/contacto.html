@@ -10,22 +10,27 @@
             <form id="form-contacto" class="mx-auto" style="max-width: 600px;">
                 {% csrf_token %}
                 <div class="campo">
+                    <label for="nombre">Nombre</label>
                     <i class="fa-solid fa-user"></i>
                     <input type="text" id="nombre" name="nombre" placeholder="Nombre" class="form-control" required>
                 </div>
                 <div class="campo">
+                    <label for="email">Correo electrónico</label>
                     <i class="fa-solid fa-envelope"></i>
                     <input type="email" id="email" name="email" placeholder="Correo electrónico" class="form-control" required>
                 </div>
                 <div class="campo">
+                    <label for="telefono">Teléfono</label>
                     <i class="fa-solid fa-phone"></i>
                     <input type="tel" id="telefono" name="telefono" placeholder="Teléfono" class="form-control" required>
                 </div>
                 <div class="campo">
+                    <label for="asunto">Asunto</label>
                     <i class="fa-solid fa-tag"></i>
                     <input type="text" id="asunto" name="asunto" placeholder="Asunto" class="form-control" required>
                 </div>
                 <div class="campo">
+                    <label for="mensaje">Mensaje</label>
                     <i class="fa-solid fa-comments"></i>
                     <textarea id="mensaje" name="mensaje" rows="4" placeholder="Mensaje" class="form-control" required></textarea>
                 </div>
@@ -96,15 +101,18 @@
                     },
                     success: function(response) {
                         if (response.message === 'success') {
+                            $('#modal-confirmacion .modal-body').text('Mensaje enviado con éxito');
                             $('#modal-confirmacion').modal('show');
                             $('#respuesta').text('');
                             $('#form-contacto')[0].reset();
                         } else {
-                            $('#respuesta').text('Hubo un error al enviar el mensaje.');
+                            $('#modal-confirmacion .modal-body').text('Hubo un error al enviar el mensaje.');
+                            $('#modal-confirmacion').modal('show');
                         }
                     },
                     error: function() {
-                        $('#respuesta').text('Hubo un error al enviar el mensaje.');
+                        $('#modal-confirmacion .modal-body').text('Hubo un error al enviar el mensaje.');
+                        $('#modal-confirmacion').modal('show');
                     }
                 });
             }

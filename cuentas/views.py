@@ -7,6 +7,9 @@ from django.contrib.auth.models import User, Group
 from .models import Receta, Comentario, Profile, Valoracion, MensajeContacto, Categoria
 from .forms import RecetaForm, ComentarioForm, UserRegistroForm, UserUpdateForm, ContactForm, ValoracionForm, CategoriaForm
 from django.db import models
+from django.views.decorators.csrf import csrf_exempt
+
+
 
 # Vista para la página principal
 def index(request):
@@ -250,6 +253,8 @@ def custom_logout_view(request):
     return redirect('login')
 
 # Vista para manejar mensajes de contacto
+
+@csrf_exempt
 def contacto(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
