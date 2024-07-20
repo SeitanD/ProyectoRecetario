@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 
+# Formulario para el modelo Receta
 class RecetaForm(forms.ModelForm):
     class Meta:
         model = Receta
@@ -16,11 +17,13 @@ class RecetaForm(forms.ModelForm):
             'categoria': forms.Select(attrs={'class': 'form-control'}),
         }
 
+# Formulario para el modelo Comentario
 class ComentarioForm(forms.ModelForm):
     class Meta:
         model = Comentario
         fields = ['texto']
 
+# Formulario de registro de usuario, extiende UserCreationForm
 class UserRegistroForm(UserCreationForm):
     email = forms.EmailField(required=True, label="Correo electrónico")
     email_confirm = forms.EmailField(required=True, label="Confirmar correo electrónico")
@@ -29,6 +32,7 @@ class UserRegistroForm(UserCreationForm):
         model = User
         fields = ["username", "email", "email_confirm", "password1", "password2"]
 
+    # Validación personalizada para asegurar que los correos electrónicos coinciden
     def clean(self):
         cleaned_data = super().clean()
         email = cleaned_data.get("email")
@@ -37,6 +41,7 @@ class UserRegistroForm(UserCreationForm):
             self.add_error("email_confirm", "Los correos electrónicos no coinciden.")
         return cleaned_data
 
+# Formulario para actualizar los datos del usuario
 class UserUpdateForm(forms.ModelForm):
     email = forms.EmailField()
     password = forms.CharField(widget=forms.PasswordInput, required=False)
@@ -46,6 +51,7 @@ class UserUpdateForm(forms.ModelForm):
         model = User
         fields = ['username', 'email', 'password', 'confirm_password']
 
+    # Validación personalizada para asegurar que las contraseñas coinciden
     def clean(self):
         cleaned_data = super().clean()
         password = cleaned_data.get('password')
@@ -56,6 +62,7 @@ class UserUpdateForm(forms.ModelForm):
         
         return cleaned_data
 
+    # Sobrescribir el método save para manejar la actualización de la contraseña
     def save(self, commit=True):
         user = super().save(commit=False)
         password = self.cleaned_data.get('password')
@@ -65,11 +72,13 @@ class UserUpdateForm(forms.ModelForm):
             user.save()
         return user
 
+# Formulario para el modelo MensajeContacto
 class ContactForm(forms.ModelForm):
     class Meta:
         model = MensajeContacto
         fields = ['nombre', 'email', 'telefono', 'asunto', 'mensaje']
 
+# Formulario para el modelo Valoracion
 class ValoracionForm(forms.ModelForm):
     class Meta:
         model = Valoracion
@@ -84,11 +93,13 @@ class ValoracionForm(forms.ModelForm):
             ])
         }
 
+# Formulario para el modelo Categoria
 class CategoriaForm(forms.ModelForm):
     class Meta:
         model = Categoria
         fields = ['nombre']
 
+# Formulario para el modelo ProductoItem
 class ProductoItemForm(forms.ModelForm):
     class Meta:
         model = ProductoItem
@@ -98,6 +109,7 @@ class ProductoItemForm(forms.ModelForm):
             'cantidad': forms.NumberInput(attrs={'class': 'form-control'}),
         }
 
+# Formulario para el modelo Producto
 class ProductoForm(forms.ModelForm):
     class Meta:
         model = Producto
