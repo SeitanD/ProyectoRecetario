@@ -1,0 +1,95 @@
+/* Establece reglas para todos los elementos del documento */
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Quicksand'; /* Establece la fuente para todo el documento */
+}
+
+html {
+    scroll-behavior: smooth; /* Añade un desplazamiento suave al hacer clic en enlaces internos */
+}
+
+/* Navbar */
+header .contenido-header {
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+}
+
+header .contenido-header nav {
+    display: flex;
+    justify-content: center;
+}
+
+header .contenido-header nav ul {
+    display: flex;
+    list-style: none;
+}
+
+header .contenido-header .logo {
+    color: #ff8f46;
+    font-size: 22px;
+}
+
+header .contenido-header nav ul li {
+    text-align: center;
+    margin: 0 10px;
+}
+
+header .contenido-header nav ul li i {
+    display: block;
+    color: #a8a8a8;
+    margin-bottom: 5px;
+}
+
+header .contenido-header nav ul li a {
+    display: block;
+    text-decoration: none;
+    color: #a8a8a8;
+    font-size: 16px;
+}
+
+header .contenido-header .social a {
+    display: inline-block;
+    background-color: #ff8f46;
+    text-decoration: none;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 30px;
+}
+
+header .contenido-header .social > i {
+    display: inline-block;
+    color: #a8a8a8;
+    margin-left: 10px;
+}
+
+.nav-responsive {
+    display: none;
+    font-size: 25px;
+    color: #a8a8a8;
+}
+
+/* Estilos para las tarjetas */
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+.comentario {
+    border-bottom: 1px solid #e0e0e0;
+    padding: 5px 0;
+}
+
+.card-footer {
+    background-color: #f8f9fa;
+}
+
+.btn-orange {
+    background-color: orange;
+    border-color: orange;
+    color: white;
+}

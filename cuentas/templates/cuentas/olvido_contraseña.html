@@ -1,0 +1,91 @@
+{% extends "cuentas/base.html" %}
+
+{% block title %}Olvidar Contraseña - Q'RICO{% endblock %}
+
+{% block content %}
+<section id="olvido-contraseña" class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+    <div class="container mt-5">
+        <div class="formulario">
+            <h2 class="text-center">¿Olvidaste tu contraseña?</h2>
+            <form id="form-olvido" class="mx-auto" style="max-width: 600px;">
+                {% csrf_token %}
+                <div class="campo mb-3">
+                    <label for="email" class="form-label">
+                        <i class="fa-solid fa-envelope"></i> Correo electrónico
+                    </label>
+                    <input type="email" id="email" name="email" placeholder="Correo electrónico" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-orange mt-3 w-100">Restablecer contraseña</button>
+            </form>
+            <p id="mensaje" class="mt-3 text-center"></p>
+            <div class="text-center mt-3">
+                <a href="{% url 'registro' %}">Registrarse</a> | 
+                <a href="{% url 'login' %}">¿Ya tienes una cuenta? Inicia sesión aquí</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modal de restablecimiento de contraseña -->
+<div id="restablecerModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Restablecimiento de Contraseña</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Se ha enviado un enlace a tu correo electrónico para restablecer tu contraseña. Por favor, revisa tu bandeja de entrada.
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="cerrar-modal" class="btn btn-orange" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#form-olvido').on('submit', function(e) {
+            e.preventDefault();
+
+            const email = $('#email').val();
+            const csrfToken = $('[name="csrfmiddlewaretoken"]').val();
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!emailRegex.test(email)) {
+                $('#mensaje').text('Por favor, ingresa un correo electrónico válido');
+            } else {
+                $.ajax({
+                    url: "{% url 'olvido_contraseña' %}",
+                    type: 'POST',
+                    data: {
+                        email: email,
+                        csrfmiddlewaretoken: csrfToken
+                    },
+                    success: function(response) {
+                        if (response.message === 'success') {
+                            $('#restablecerModal').modal('show');
+                            $('#mensaje').text('');
+                            $('#form-olvido')[0].reset();
+                        } else {
+                            $('#mensaje').text('Hubo un error al enviar el correo.');
+                        }
+                    },
+                    error: function() {
+                        $('#mensaje').text('Hubo un error al enviar el correo.');
+                    }
+                });
+            }
+        });
+
+        $('#cerrar-modal').on('click', function() {
+            $('#restablecerModal').modal('hide');
+            window.location.href = "{% url 'index' %}";
+        });
+    });
+</script>
+{% endblock %}

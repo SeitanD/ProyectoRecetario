@@ -1,0 +1,19 @@
+{% extends 'cuentas/base.html' %}
+
+{% block title %}Crear Categoría - Q'RICO{% endblock %}
+
+{% block content %}
+<main class="container mt-5">
+    <h2>Crear Categoría</h2>
+    {% if perms.cuentas.add_categoria %}
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-orange">Crear Categoría</button>
+        </form>
+    {% else %}
+        <p>No tienes permiso para crear categorías.</p>
+    {% endif %}
+    <a href="{% url 'listar_categorias' %}" class="btn btn-orange mt-3">Ver Listado de Categorías</a>
+</main>
+{% endblock %}

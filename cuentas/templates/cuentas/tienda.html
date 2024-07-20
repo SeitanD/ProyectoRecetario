@@ -1,0 +1,57 @@
+{% extends "cuentas/base.html" %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+<style>
+.card-img-top {
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+}
+</style>
+<div class="container mt-4">
+    <h2>Tienda</h2>
+    {% if perms.cuentas.add_producto %}
+        <a href="{% url 'crear_producto' %}" class="btn btn-orange mb-3">Agregar Producto</a>
+    {% endif %}
+    <a href="{% url 'ver_carrito' %}" class="btn btn-orange mb-3 float-right">Ir al Carrito de Compras</a>
+    <div class="row">
+        {% for producto in productos %}
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <img class="card-img-top" src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ producto.nombre }}</h5>
+                    <p class="card-text">{{ producto.descripcion }}</p>
+                    <p class="card-text">Precio: $<span id="precio-unitario-{{ producto.id }}">{{ producto.precio|floatformat:0|intcomma }}</span></p>
+                    <p class="card-text">Precio Total: $<span id="precio-total-{{ producto.id }}">{{ producto.precio|floatformat:0|intcomma }}</span></p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                            {% if perms.cuentas.change_producto %}
+                                <a href="{% url 'editar_producto' producto.id %}" class="btn btn-sm btn-outline-secondary">Editar</a>
+                            {% endif %}
+                            {% if perms.cuentas.delete_producto %}
+                                <form method="post" action="{% url 'eliminar_producto' producto.id %}" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                        <form method="post" action="{% url 'agregar_al_carrito' producto.id %}" class="form-inline">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="cantidad-{{ producto.id }}" class="mr-2">Cantidad:</label>
+                                <input type="number" name="cantidad" class="form-control mr-2" value="1" min="1" id="cantidad-{{ producto.id }}">
+                            </div>
+                            <button type="submit" class="btn btn-orange">Agregar al Carrito</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script src="{% static 'cuentas/js/tienda.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,15 @@
+<!-- cuentas/templates/cuentas/actualizar_perfil.html -->
+{% extends "cuentas/base.html" %}
+
+{% block content %}
+<h2>Actualizar Perfil</h2>
+{% if perms.cuentas.change_profile %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Actualizar Perfil</button>
+    </form>
+{% else %}
+    <p>No tienes permiso para actualizar el perfil.</p>
+{% endif %}
+{% endblock %}

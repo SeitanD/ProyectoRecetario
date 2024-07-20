@@ -1,0 +1,18 @@
+{% extends "cuentas/base.html" %}
+
+{% block title %}Editar Comentario{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Editar Comentario</h2>
+    {% if perms.cuentas.change_comment %}
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        </form>
+    {% else %}
+        <p>No tienes permiso para editar comentarios.</p>
+    {% endif %}
+</div>
+{% endblock %}

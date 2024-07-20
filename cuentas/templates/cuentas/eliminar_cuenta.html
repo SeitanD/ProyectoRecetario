@@ -1,0 +1,18 @@
+<!-- cuentas/templates/cuentas/eliminar_cuenta.html -->
+{% extends "cuentas/base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Eliminar Cuenta</h2>
+    {% if perms.cuentas.delete_user %}
+        <p>¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Eliminar Cuenta</button>
+            <a href="{% url 'perfil' %}" class="btn btn-secondary">Cancelar</a>
+        </form>
+    {% else %}
+        <p>No tienes permiso para eliminar la cuenta.</p>
+    {% endif %}
+</div>
+{% endblock %}

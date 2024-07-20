@@ -1,0 +1,49 @@
+{% extends "cuentas/base.html" %}
+
+{% block title %}Mensajes de Contacto - Q'RICO{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Mensajes de Contacto</h2>
+    {% if perms.cuentas.view_contact %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Teléfono</th>
+                    <th>Asunto</th>
+                    <th>Mensaje</th>
+                    <th>Fecha de Envío</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for contacto in contactos %}
+                <tr>
+                    <td>{{ contacto.nombre }}</td>
+                    <td>{{ contacto.email }}</td>
+                    <td>{{ contacto.telefono }}</td>
+                    <td>{{ contacto.asunto }}</td>
+                    <td>{{ contacto.mensaje }}</td>
+                    <td>{{ contacto.fecha_envio }}</td>
+                    <td>
+                        {% if perms.cuentas.change_contact %}
+                            <a href="{% url 'editar_contacto' contacto.pk %}" class="btn btn-sm btn-warning">Editar</a>
+                        {% endif %}
+                        {% if perms.cuentas.delete_contact %}
+                            <form action="{% url 'eliminar_contacto' contacto.pk %}" method="post" class="d-inline-block">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No tienes permiso para ver los mensajes de contacto.</p>
+    {% endif %}
+</div>
+{% endblock %}
