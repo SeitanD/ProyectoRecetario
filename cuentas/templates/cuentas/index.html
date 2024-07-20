@@ -78,11 +78,26 @@
                             <span>Blog</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="{% url 'perfil' %}">
+                            <i class="fa-solid fa-user"></i>
+                            <span>Perfil</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'tienda' %}">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                            <span>Tienda</span>
+                        </a>
+                    </li>
                 </ul>
             </nav>
             <div class="social">
-                <a href="{% url 'login' %}">Iniciar Sesión <i class="fa-solid fa-user"></i></a>
-                
+                {% if user.is_authenticated %}
+                    <a href="{% url 'logout' %}" class="btn btn-orange">Cerrar Sesión <i class="fa-solid fa-user"></i></a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-orange">Iniciar Sesión <i class="fa-solid fa-user"></i></a>
+                {% endif %}
             </div>
             <div class="nav-responsive" id="bar" onclick="mostrarOcultarMenu()">
                 <i class="fa-solid fa-bars"></i>
@@ -119,48 +134,58 @@
     <!-- Título de la sección -->
     <h2>¿No sabes que comer?</h2>
     <h2>Te invitamos a revisar nuestras recetas saludables...</h2>
-        <!-- Contenedor de tarjetas de comidas -->
+    <!-- Contenedor de tarjetas de comidas -->
     <div class="fila">
-        <!-- Tarjeta de Aperitivos -->
-        <div class="item">
-            <a href="{% url 'aperitivos' %}" class="card-link">
-                <div class="card">
-                    <img src="{% static 'cuentas/img/ceviche.jpg' %}" class="card-img-top" alt="Aperitivos">
-                    <div class="card-body">
-                        <h5 class="card-title">Aperitivos</h5>
-                        <p class="card-text">Perfectos para picar.</p>
-                        <a href="{% url 'aperitivos' %}" class="btn btn-primary">Ver más</a>
+        <!-- Verificación de permisos para ver aperitivos -->
+        {% if perms.cuentas.view_aperitivos %}
+            <!-- Tarjeta de Aperitivos -->
+            <div class="item">
+                <a href="{% url 'aperitivos' %}" class="card-link">
+                    <div class="card">
+                        <img src="{% static 'cuentas/img/ceviche.jpg' %}" class="card-img-top" alt="Aperitivos">
+                        <div class="card-body">
+                            <h5 class="card-title">Aperitivos</h5>
+                            <p class="card-text">Perfectos para picar.</p>
+                            <a href="{% url 'aperitivos' %}" class="btn btn-primary">Ver más</a>
+                        </div>
                     </div>
-                </div>
-            </a>
-        </div>
+                </a>
+            </div>
+        {% endif %}
 
-        <!-- Tarjeta de Batidos -->
-        <div class="item">
-            <a href="{% url 'batidos' %}" class="card-link">
-                <div class="card">
-                    <img src="{% static 'cuentas/img/batido1.jpg' %}"class="card-img-top" alt="Batidos">
-                    <div class="card-body">
-                        <h5 class="card-title">Refrescos</h5>
-                        <p class="card-text">Frescos y deliciosos.</p>
-                        <a href="{% url 'batidos' %}" class="btn btn-primary">Ver más</a>
-                    </div>                </div>
-            </a>
-        </div>
-        
-        <!-- Tarjeta de Comida -->
-        <div class="item">
-            <a href="{% url 'comida' %}" class="card-link">
-                <div class="card">
-                    <img src="{% static 'cuentas/img/plato1.jpg' %}" class="card-img-top" alt="Comida">
-                    <div class="card-body">
-                        <h5 class="card-title">Comida</h5>
-                        <p class="card-text">Platos saludables.</p>
-                        <a href="{% url 'comida' %}" class="btn btn-primary">Ver más</a>
+        <!-- Verificación de permisos para ver batidos -->
+        {% if perms.cuentas.view_batidos %}
+            <!-- Tarjeta de Batidos -->
+            <div class="item">
+                <a href="{% url 'batidos' %}" class="card-link">
+                    <div class="card">
+                        <img src="{% static 'cuentas/img/batido1.jpg' %}" class="card-img-top" alt="Batidos">
+                        <div class="card-body">
+                            <h5 class="card-title">Refrescos</h5>
+                            <p class="card-text">Frescos y deliciosos.</p>
+                            <a href="{% url 'batidos' %}" class="btn btn-primary">Ver más</a>
+                        </div>
                     </div>
-                </div>
-            </a>
-        </div>
+                </a>
+            </div>
+        {% endif %}
+        
+        <!-- Verificación de permisos para ver comidas -->
+        {% if perms.cuentas.view_comida %}
+            <!-- Tarjeta de Comida -->
+            <div class="item">
+                <a href="{% url 'comida' %}" class="card-link">
+                    <div class="card">
+                        <img src="{% static 'cuentas/img/plato1.jpg' %}" class="card-img-top" alt="Comida">
+                        <div class="card-body">
+                            <h5 class="card-title">Comida</h5>
+                            <p class="card-text">Platos saludables.</p>
+                            <a href="{% url 'comida' %}" class="btn btn-primary">Ver más</a>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% endif %}
     </div>
 </section>
 

@@ -1,0 +1,200 @@
+/* Establece reglas para todos los elementos del documento */
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Quicksand'; /* Establece la fuente para todo el documento */
+}
+
+html {
+    scroll-behavior: smooth; /* Añade un desplazamiento suave al hacer clic en enlaces internos */
+}
+
+/* Navbar */
+header .contenido-header {
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+}
+
+header .contenido-header nav {
+    display: flex;
+    justify-content: center;
+}
+
+header .contenido-header nav ul {
+    display: flex;
+    list-style: none;
+}
+
+header .contenido-header .logo {
+    color: #ff8f46;
+    font-size: 22px;
+}
+
+header .contenido-header nav ul li {
+    text-align: center;
+    margin: 0 10px;
+}
+
+header .contenido-header nav ul li i {
+    display: block;
+    color: #a8a8a8;
+    margin-bottom: 5px;
+}
+
+header .contenido-header nav ul li a {
+    display: block;
+    text-decoration: none;
+    color: #a8a8a8;
+    font-size: 16px;
+}
+
+header .contenido-header .social a {
+    display: inline-block;
+    background-color: #ff8f46;
+    text-decoration: none;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 30px;
+}
+
+header .contenido-header .social > i {
+    display: inline-block;
+    color: #a8a8a8;
+    margin-left: 10px;
+}
+
+.nav-responsive {
+    display: none;
+    font-size: 25px;
+    color: #a8a8a8;
+}
+
+/* Estilos para las tarjetas */
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+.comentario {
+    border-bottom: 1px solid #e0e0e0;
+    padding: 5px 0;
+}
+
+.card-footer {
+    background-color: #f8f9fa;
+}
+
+.btn-orange {
+    background-color: orange;
+    border-color: orange;
+    color: rgb(255, 115, 0);
+}
+
+/* Estilos para las valoraciones */
+.rating {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 0.3rem;
+    --stroke: #666;
+    --fill: #ffc73a;
+}
+
+.rating input {
+    appearance: unset;
+}
+
+.rating label {
+    cursor: pointer;
+}
+
+.rating svg {
+    width: 2rem;
+    height: 2rem;
+    overflow: visible;
+    fill: transparent;
+    stroke: var(--stroke);
+    stroke-linejoin: bevel;
+    stroke-dasharray: 12;
+    animation: idle 4s linear infinite;
+    transition: stroke 0.2s, fill 0.5s;
+}
+
+@keyframes idle {
+    from {
+        stroke-dashoffset: 24;
+    }
+}
+
+.rating label:hover svg {
+    stroke: var(--fill);
+}
+
+.rating input:checked ~ label svg {
+    transition: 0s;
+    animation: idle 4s linear infinite, yippee 0.75s backwards;
+    fill: var(--fill);
+    stroke: var(--fill);
+    stroke-opacity: 0;
+    stroke-dasharray: 0;
+    stroke-linejoin: miter;
+    stroke-width: 8px;
+}
+
+@keyframes yippee {
+    0% {
+        transform: scale(1);
+        fill: var(--fill);
+        fill-opacity: 0;
+        stroke-opacity: 1;
+        stroke: var(--stroke);
+        stroke-dasharray: 10;
+        stroke-width: 1px;
+        stroke-linejoin: bevel;
+    }
+
+    30% {
+        transform: scale(0);
+        fill: var(--fill);
+        fill-opacity: 0;
+        stroke-opacity: 1;
+        stroke: var(--stroke);
+        stroke-dasharray: 10;
+        stroke-width: 1px;
+        stroke-linejoin: bevel;
+    }
+
+    30.1% {
+        stroke: var(--fill);
+        stroke-dasharray: 0;
+        stroke-linejoin: miter;
+        stroke-width: 8px;
+    }
+
+    60% {
+        transform: scale(1.2);
+        fill: var(--fill);
+    }
+}
+
+
+.card-text p {
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Número de líneas que se muestran antes de cortar el texto */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.btn-orange {
+    background-color: #FF7F50;
+    color: white;
+}
+
+.btn-orange:hover {
+    background-color: #FF6347;
+    color: white;
+}

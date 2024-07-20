@@ -1,225 +1,537 @@
-from django.shortcuts import render, redirect, get_object_or_404  # Importa funciones para renderizar plantillas, redirigir y obtener objetos o devolver 404
-from django.contrib.auth.decorators import login_required  # Importa el decorador para requerir inicio de sesión
-from django.contrib import messages  # Importa el módulo de mensajes para mostrar mensajes de éxito o error
-from django.contrib.auth import login, authenticate, logout, update_session_auth_hash  # Importa funciones de autenticación y manejo de sesiones
-from django.contrib.auth.models import User  # Importa el modelo User de Django
-from .models import Receta, Comentario, Profile  # Importa los modelos definidos en models.py
-from .forms import RecetaForm, ComentarioForm, UserRegistroForm, UserUpdateForm  # Importa los formularios definidos en forms.py
+from django.http import JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
+from django.contrib.auth.models import User, Group
+from .models import Receta, Comentario, Profile, Valoracion, MensajeContacto, Categoria, Carrito, ProductoItem, Producto, Pedido
+from .forms import RecetaForm, ComentarioForm, UserRegistroForm, UserUpdateForm, ContactForm, ValoracionForm, CategoriaForm, ProductoItemForm, ProductoForm
+from django.db import models
+from django.views.decorators.csrf import csrf_exempt
 
 # Vista para la página principal
 def index(request):
-    return render(request, 'cuentas/index.html')  # Renderiza la plantilla index.html
+    # Renderiza la plantilla 'index.html'
+    return render(request, 'cuentas/index.html')
 
 # Vista para la página de aperitivos
 def aperitivos(request):
-    return render(request, 'cuentas/aperitivos.html')  # Renderiza la plantilla aperitivos.html
+    # Renderiza la plantilla 'aperitivos.html'
+    return render(request, 'cuentas/aperitivos.html')
 
 # Vista para la página de comida
 def comida(request):
-    return render(request, 'cuentas/comida.html')  # Renderiza la plantilla comida.html
+    # Renderiza la plantilla 'comida.html'
+    return render(request, 'cuentas/comida.html')
 
 # Vista para la página de batidos
 def batidos(request):
-    return render(request, 'cuentas/batidos.html')  # Renderiza la plantilla batidos.html
-
-# Vista para la página de contacto
-def contacto(request):
-    return render(request, 'cuentas/contacto.html')  # Renderiza la plantilla contacto.html
+    # Renderiza la plantilla 'batidos.html'
+    return render(request, 'cuentas/batidos.html')
 
 # Vista para la página de inicio de sesión
 def login_view(request):
-    return render(request, 'cuentas/login.html')  # Renderiza la plantilla login.html
+    # Renderiza la plantilla 'login.html'
+    return render(request, 'cuentas/login.html')
 
 # Vista para el registro de nuevos usuarios
 def registro(request):
-    if request.method == 'POST':  # Comprueba si la solicitud es POST
-        form = UserRegistroForm(request.POST)  # Crea una instancia del formulario con los datos POST
-        if form.is_valid():  # Comprueba si el formulario es válido
-            user = form.save()  # Guarda el nuevo usuario
-            login(request, user)  # Inicia sesión con el nuevo usuario
-            messages.success(request, '¡Registro exitoso! Ahora estás logueado.')  # Muestra un mensaje de éxito
-            return redirect('index')  # Redirige a la página principal
+    if request.method == 'POST':
+        # Si el método de la solicitud es POST, crea un formulario de registro con los datos enviados
+        form = UserRegistroForm(request.POST)
+        if form.is_valid():
+            # Si el formulario es válido, guarda el nuevo usuario
+            user = form.save()
+            # Inicia sesión automáticamente al nuevo usuario
+            login(request, user)
+            # Asigna el nuevo usuario al grupo 'User'
+            user_group = Group.objects.get(name='User')
+            user.groups.add(user_group)
+            messages.success(request, '¡Registro exitoso! Ahora estás logueado.')
+            # Redirige a la página principal
+            return redirect('index')
+        else:
+            messages.error(request, 'Error al registrarse. Por favor, corrige los errores.')
     else:
-        form = UserRegistroForm()  # Crea una instancia vacía del formulario
-    return render(request, 'cuentas/registro.html', {'form': form})  # Renderiza la plantilla registro.html con el formulario
+        # Si el método de la solicitud no es POST, muestra un formulario vacío
+        form = UserRegistroForm()
+    # Renderiza la plantilla 'registro.html' con el formulario de registro
+    return render(request, 'cuentas/registro.html', {'form': form})
 
-# Vista para el blog que muestra recetas y permite crear recetas y comentarios
-@login_required  # Requiere que el usuario esté autenticado
 def blog(request):
-    recetas = Receta.objects.all()  # Obtiene todas las recetas
-    form = RecetaForm()  # Crea una instancia vacía del formulario de recetas
-
-    if request.method == "POST":  # Comprueba si la solicitud es POST
-        if 'crear_receta' in request.POST:  # Comprueba si el formulario es para crear una receta
-            form = RecetaForm(request.POST, request.FILES)  # Crea una instancia del formulario con los datos POST y archivos
-            if form.is_valid():  # Comprueba si el formulario es válido
-                receta = form.save(commit=False)  # Guarda la receta pero no la guarda en la base de datos aún
-                receta.autor = request.user  # Establece el autor de la receta como el usuario actual
-                receta.save()  # Guarda la receta en la base de datos
-                messages.success(request, '¡Receta creada con éxito!')  # Muestra un mensaje de éxito
-                return redirect('blog')  # Redirige a la página del blog
-            else:
-                messages.error(request, 'Error al crear la receta. Por favor, corrige los errores.')  # Muestra un mensaje de error
-
-        elif 'comentar' in request.POST:  # Comprueba si el formulario es para agregar un comentario
-            receta_id = request.POST.get('receta_id')  # Obtiene el ID de la receta del formulario
-            receta = get_object_or_404(Receta, id=receta_id)  # Obtiene la receta o devuelve un error 404 si no existe
-            comentario_form = ComentarioForm(request.POST)  # Crea una instancia del formulario de comentarios con los datos POST
-            if comentario_form.is_valid():  # Comprueba si el formulario es válido
-                comentario = comentario_form.save(commit=False)  # Guarda el comentario pero no lo guarda en la base de datos aún
-                comentario.receta = receta  # Establece la receta del comentario
-                comentario.autor = request.user  # Establece el autor del comentario como el usuario actual
-                comentario.save()  # Guarda el comentario en la base de datos
-                messages.success(request, '¡Comentario agregado con éxito!')  # Muestra un mensaje de éxito
-                return redirect('blog')  # Redirige a la página del blog
-            else:
-                messages.error(request, 'Error al agregar el comentario. Por favor, corrige los errores.')  # Muestra un mensaje de error
-
+    categoria_id = request.GET.get('categoria')
+    if categoria_id:
+        # Filtra las recetas por la categoría seleccionada
+        recetas = Receta.objects.filter(categoria_id=categoria_id)
+    else:
+        # Obtiene todas las recetas si no se selecciona ninguna categoría
+        recetas = Receta.objects.all()
+    # Obtiene todas las categorías para mostrarlas en el filtro
+    categorias = Categoria.objects.all()
+    comentario_form = ComentarioForm()
+    
     context = {
-        'recetas': recetas,  # Pasa las recetas al contexto
-        'form': form,  # Pasa el formulario de recetas al contexto
-        'comentario_form': ComentarioForm(),  # Pasa un formulario de comentarios vacío al contexto
+        'recetas': recetas,
+        'categorias': categorias,
+        'comentario_form': comentario_form
     }
-    return render(request, 'cuentas/blog.html', context)  # Renderiza la plantilla blog.html con el contexto
+    
+    # Renderiza la plantilla 'blog.html' con las recetas y categorías
+    return render(request, 'cuentas/blog.html', context)
+
+# Vista para publicar recetas (requiere autenticación)
+@login_required
+def publicar_receta(request):
+    if request.method == 'POST':
+        # Si el método de la solicitud es POST, crea un formulario de receta con los datos enviados
+        form = RecetaForm(request.POST, request.FILES)
+        if form.is_valid():
+            # Si el formulario es válido, guarda la receta pero sin guardar en la base de datos todavía
+            receta = form.save(commit=False)
+            # Asigna el usuario actual como autor de la receta
+            receta.autor = request.user
+            # Guarda la receta en la base de datos
+            receta.save()
+            messages.success(request, '¡Receta creada con éxito!')
+            # Redirige al blog
+            return redirect('blog')
+        else:
+            messages.error(request, 'Error al crear la receta. Por favor, corrige los errores.')
+    else:
+        # Si el método de la solicitud no es POST, muestra un formulario vacío
+        form = RecetaForm()
+    # Renderiza la plantilla 'publicar_receta.html' con el formulario de receta
+    return render(request, 'cuentas/publicar_receta.html', {'form': form})
+
+# Vista para agregar comentario (requiere autenticación)
+@login_required
+def add_comment(request, receta_id):
+    # Obtiene la receta correspondiente al ID
+    receta = get_object_or_404(Receta, id=receta_id)
+    if request.method == 'POST':
+        # Crea un formulario de comentario con los datos enviados
+        comentario_form = ComentarioForm(request.POST)
+        if comentario_form.is_valid():
+            # Si el formulario es válido, guarda el comentario pero sin guardar en la base de datos todavía
+            comentario = comentario_form.save(commit=False)
+            # Asigna la receta y el autor al comentario
+            comentario.receta = receta
+            comentario.autor = request.user
+            # Guarda el comentario en la base de datos
+            comentario.save()
+            messages.success(request, '¡Comentario agregado con éxito!')
+        else:
+            messages.error(request, 'Error al agregar el comentario. Por favor, corrige los errores.')
+    return redirect('blog')
+
+@login_required
+def add_rating(request, receta_id):
+    # Obtiene la receta correspondiente al ID
+    receta = get_object_or_404(Receta, id=receta_id)
+    if request.method == 'POST':
+        # Crea un formulario de valoración con los datos enviados
+        form = ValoracionForm(request.POST)
+        if form.is_valid():
+            # Si el formulario es válido, obtiene la puntuación
+            puntuacion = form.cleaned_data['puntuacion']
+            # Crea o actualiza la valoración del usuario para la receta
+            valoracion, created = Valoracion.objects.update_or_create(
+                receta=receta,
+                usuario=request.user,
+                defaults={'puntuacion': puntuacion},
+            )
+            # Calcula la nueva valoración promedio y el total de valoraciones
+            nueva_valoracion = receta.valoraciones.aggregate(models.Avg('puntuacion'))['puntuacion__avg']
+            total_valoraciones = receta.valoraciones.count()
+            receta.valoracion = nueva_valoracion
+            receta.total_valoraciones = total_valoraciones
+            receta.save()
+            # Devuelve la nueva valoración promedio y el total de valoraciones como JSON
+            return JsonResponse({
+                'new_rating': nueva_valoracion,
+                'total_ratings': total_valoraciones
+            })
+        else:
+            return JsonResponse({'error': 'Formulario no válido'}, status=400)
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+# Vista para listar valoraciones de una receta
+@login_required
+def listar_valoraciones(request, receta_id):
+    # Obtiene la receta correspondiente al ID
+    receta = get_object_or_404(Receta, id=receta_id)
+    # Obtiene todas las valoraciones de la receta
+    valoraciones = Valoracion.objects.filter(receta=receta)
+    # Renderiza la plantilla 'listar_valoraciones.html' con las valoraciones
+    return render(request, 'cuentas/listar_valoraciones.html', {'receta': receta, 'valoraciones': valoraciones})
+
+# Vista para eliminar una valoración
+@login_required
+def eliminar_valoracion(request, valoracion_id):
+    # Obtiene la valoración correspondiente al ID
+    valoracion = get_object_or_404(Valoracion, id=valoracion_id)
+    if valoracion.usuario == request.user:
+        # Si el usuario es el autor de la valoración, la elimina
+        valoracion.delete()
+        messages.success(request, 'Valoración eliminada con éxito.')
+    else:
+        messages.error(request, 'No tienes permiso para eliminar esta valoración.')
+    return redirect('blog')
 
 # Vista para eliminar una receta
-@login_required  # Requiere que el usuario esté autenticado
+@login_required
 def eliminar_receta(request, receta_id):
-    receta = get_object_or_404(Receta, id=receta_id)  # Obtiene la receta o devuelve un error 404 si no existe
-    if request.method == "POST" and receta.autor == request.user:  # Comprueba si la solicitud es POST y el usuario es el autor de la receta
-        receta.delete()  # Elimina la receta
-        messages.success(request, 'Receta eliminada con éxito.')  # Muestra un mensaje de éxito
-        return redirect('blog')  # Redirige a la página del blog
+    # Obtiene la receta correspondiente al ID
+    receta = get_object_or_404(Receta, id=receta_id)
+    if request.method == "POST" and receta.autor == request.user:
+        # Si el método de la solicitud es POST y el usuario es el autor, elimina la receta
+        receta.delete()
+        messages.success(request, 'Receta eliminada con éxito.')
+    return redirect('blog')
 
 # Vista para eliminar un comentario
-@login_required  # Requiere que el usuario esté autenticado
+@login_required
 def eliminar_comentario(request, comentario_id):
-    comentario = get_object_or_404(Comentario, id=comentario_id)  # Obtiene el comentario o devuelve un error 404 si no existe
-    if request.method == "POST" and comentario.autor == request.user:  # Comprueba si la solicitud es POST y el usuario es el autor del comentario
-        comentario.delete()  # Elimina el comentario
-        messages.success(request, 'Comentario eliminado con éxito.')  # Muestra un mensaje de éxito
-        return redirect('blog')  # Redirige a la página del blog
+    # Obtiene el comentario correspondiente al ID
+    comentario = get_object_or_404(Comentario, id=comentario_id)
+    if request.method == "POST" and comentario.autor == request.user:
+        # Si el método de la solicitud es POST y el usuario es el autor, elimina el comentario
+        comentario.delete()
+        messages.success(request, 'Comentario eliminado con éxito.')
+    return redirect('blog')
 
 # Vista para agregar una receta a los favoritos
-@login_required  # Requiere que el usuario esté autenticado
+@login_required
 def add_to_favorites(request, receta_id):
-    receta = get_object_or_404(Receta, id=receta_id)  # Obtiene la receta o devuelve un error 404 si no existe
-    profile = request.user.profile  # Obtiene el perfil del usuario actual
-    if receta not in profile.favoritos.all():  # Comprueba si la receta no está en la lista de favoritos
-        profile.favoritos.add(receta)  # Añade la receta a la lista de favoritos
-        messages.success(request, '¡Receta añadida a tus favoritos!')  # Muestra un mensaje de éxito
+    # Obtiene la receta correspondiente al ID
+    receta = get_object_or_404(Receta, id=receta_id)
+    profile = request.user.profile
+    if receta not in profile.favoritos.all():
+        # Si la receta no está en los favoritos, la añade
+        profile.favoritos.add(receta)
+        messages.success(request, '¡Receta añadida a tus favoritos!')
     else:
-        messages.info(request, 'Esta receta ya está en tus favoritos.')  # Muestra un mensaje informativo
-    return redirect('blog')  # Redirige a la página del blog
+        messages.info(request, 'Esta receta ya está en tus favoritos.')
+    return redirect('blog')
 
 # Vista para eliminar una receta de los favoritos
-@login_required  # Requiere que el usuario esté autenticado
+@login_required
 def eliminar_favorito(request, receta_id):
-    receta = get_object_or_404(Receta, id=receta_id)  # Obtiene la receta o devuelve un error 404 si no existe
-    request.user.profile.favoritos.remove(receta)  # Elimina la receta de la lista de favoritos del usuario
-    messages.success(request, 'Receta eliminada de tus favoritos.')  # Muestra un mensaje de éxito
-    return redirect('perfil')  # Redirige a la página del perfil
-
-# Vista para registrar un nuevo usuario (duplicada, se puede eliminar una)
-def registro(request):
-    if request.method == 'POST':  # Comprueba si la solicitud es POST
-        form = UserRegistroForm(request.POST)  # Crea una instancia del formulario con los datos POST
-        if form.is_valid():  # Comprueba si el formulario es válido
-            user = form.save()  # Guarda el nuevo usuario
-            login(request, user)  # Inicia sesión con el nuevo usuario
-            messages.success(request, '¡Registro exitoso! Ahora estás logueado.')  # Muestra un mensaje de éxito
-            return redirect('index')  # Redirige a la página principal
-        else:
-            messages.error(request, 'Error al registrarse. Por favor, corrige los errores.')  # Muestra un mensaje de error
-    else:
-        form = UserRegistroForm()  # Crea una instancia vacía del formulario
-    return render(request, 'cuentas/registro.html', {'form': form})  # Renderiza la plantilla registro.html con el formulario
-
-# Vista para agregar un comentario a una receta
-@login_required  # Requiere que el usuario esté autenticado
-def add_comment(request, receta_id):
-    receta = get_object_or_404(Receta, id=receta_id)  # Obtiene la receta o devuelve un error 404 si no existe
-    if request.method == "POST":  # Comprueba si la solicitud es POST
-        comentario_form = ComentarioForm(request.POST)  # Crea una instancia del formulario de comentarios con los datos POST
-        if comentario_form.is_valid():  # Comprueba si el formulario es válido
-            comentario = comentario_form.save(commit=False)  # Guarda el comentario pero no lo guarda en la base de datos aún
-            comentario.receta = receta  # Establece la receta del comentario
-            comentario.autor = request.user  # Establece el autor del comentario como el usuario actual
-            comentario.save()  # Guarda el comentario en la base de datos
-            messages.success(request, '¡Comentario agregado con éxito!')  # Muestra un mensaje de éxito
-        else:
-            messages.error(request, 'Error al agregar el comentario. Por favor, corrige los errores.')  # Muestra un mensaje de error
-    return redirect('blog')  # Redirige a la página del blog
+    # Obtiene la receta correspondiente al ID
+    receta = get_object_or_404(Receta, id=receta_id)
+    # Elimina la receta de los favoritos del usuario
+    request.user.profile.favoritos.remove(receta)
+    messages.success(request, 'Receta eliminada de tus favoritos.')
+    return redirect('perfil')
 
 # Vista para mostrar el perfil del usuario
-@login_required  # Requiere que el usuario esté autenticado
+@login_required
 def perfil(request):
-    profile = request.user.profile  # Obtiene el perfil del usuario actual
-    recetas_favoritas = profile.favoritos.all()  # Obtiene todas las recetas favoritas del usuario
-    return render(request, 'cuentas/perfil.html', {'user': request.user, 'recetas_favoritas': recetas_favoritas})  # Renderiza la plantilla perfil.html con el usuario y sus recetas favoritas
+    profile = request.user.profile
+    # Obtiene las recetas favoritas del usuario
+    recetas_favoritas = profile.favoritos.all()
+    # Renderiza la plantilla 'perfil.html' con la información del perfil y las recetas favoritas
+    return render(request, 'cuentas/perfil.html', {'user': request.user, 'recetas_favoritas': recetas_favoritas})
 
 # Vista para editar una receta
-@login_required  # Requiere que el usuario esté autenticado
+@login_required
 def editar_receta(request, receta_id):
-    receta = get_object_or_404(Receta, id=receta_id)  # Obtiene la receta o devuelve un error 404 si no existe
-    if receta.autor != request.user:  # Comprueba si el usuario actual no es el autor de la receta
-        return redirect('blog')  # Redirige a la página del blog
-    if request.method == "POST":  # Comprueba si la solicitud es POST
-        form = RecetaForm(request.POST, request.FILES, instance=receta)  # Crea una instancia del formulario con los datos POST y archivos
-        if form.is_valid():  # Comprueba si el formulario es válido
-            form.save()  # Guarda los cambios en la receta
-            messages.success(request, 'Receta editada con éxito.')  # Muestra un mensaje de éxito
-            return redirect('blog')  # Redirige a la página del blog
+    # Obtiene la receta correspondiente al ID
+    receta = get_object_or_404(Receta, id=receta_id)
+    if receta.autor != request.user:
+        # Si el usuario no es el autor, redirige al blog
+        return redirect('blog')
+    if request.method == "POST":
+        # Si el método de la solicitud es POST, crea un formulario de receta con los datos enviados
+        form = RecetaForm(request.POST, request.FILES, instance=receta)
+        if form.is_valid():
+            # Si el formulario es válido, guarda los cambios en la receta
+            form.save()
+            messages.success(request, 'Receta editada con éxito.')
+            return redirect('blog')
         else:
-            messages.error(request, 'Error al editar la receta. Por favor, corrige los errores.')  # Muestra un mensaje de error
+            messages.error(request, 'Error al editar la receta. Por favor, corrige los errores.')
     else:
-        form = RecetaForm(instance=receta)  # Crea una instancia del formulario con la receta existente
-    return render(request, 'cuentas/editar_receta.html', {'form': form})  # Renderiza la plantilla editar_receta.html con el formulario
+        # Si el método de la solicitud no es POST, muestra un formulario con los datos de la receta
+        form = RecetaForm(instance=receta)
+    # Renderiza la plantilla 'editar_receta.html' con el formulario de receta
+    return render(request, 'cuentas/editar_receta.html', {'form': form})
 
 # Vista para editar un comentario
-@login_required  # Requiere que el usuario esté autenticado
+@login_required
 def editar_comentario(request, comentario_id):
-    comentario = get_object_or_404(Comentario, id=comentario_id)  # Obtiene el comentario o devuelve un error 404 si no existe
-    if comentario.autor != request.user:  # Comprueba si el usuario actual no es el autor del comentario
-        return redirect('blog')  # Redirige a la página del blog
-    if request.method == "POST":  # Comprueba si la solicitud es POST
-        form = ComentarioForm(request.POST, instance=comentario)  # Crea una instancia del formulario con los datos POST
-        if form.is_valid():  # Comprueba si el formulario es válido
-            form.save()  # Guarda los cambios en el comentario
-            messages.success(request, 'Comentario editado con éxito.')  # Muestra un mensaje de éxito
-            return redirect('blog')  # Redirige a la página del blog
+    # Obtiene el comentario correspondiente al ID
+    comentario = get_object_or_404(Comentario, id=comentario_id)
+    if comentario.autor != request.user:
+        # Si el usuario no es el autor, redirige al blog
+        return redirect('blog')
+    if request.method == "POST":
+        # Si el método de la solicitud es POST, crea un formulario de comentario con los datos enviados
+        form = ComentarioForm(request.POST, instance=comentario)
+        if form.is_valid():
+            # Si el formulario es válido, guarda los cambios en el comentario
+            form.save()
+            messages.success(request, 'Comentario editado con éxito.')
+            return redirect('blog')
         else:
-            messages.error(request, 'Error al editar el comentario. Por favor, corrige los errores.')  # Muestra un mensaje de error
+            messages.error(request, 'Error al editar el comentario. Por favor, corrige los errores.')
     else:
-        form = ComentarioForm(instance=comentario)  # Crea una instancia del formulario con el comentario existente
-    return render(request, 'cuentas/editar_comentario.html', {'form': form})  # Renderiza la plantilla editar_comentario.html con el formulario
+        # Si el método de la solicitud no es POST, muestra un formulario con los datos del comentario
+        form = ComentarioForm(instance=comentario)
+    # Renderiza la plantilla 'editar_comentario.html' con el formulario de comentario
+    return render(request, 'cuentas/editar_comentario.html', {'form': form})
 
 # Vista para actualizar el perfil del usuario
-@login_required  # Requiere que el usuario esté autenticado
+@login_required
 def actualizar_perfil(request):
-    if request.method == 'POST':  # Comprueba si la solicitud es POST
-        form = UserUpdateForm(request.POST, instance=request.user)  # Crea una instancia del formulario con los datos POST y el usuario actual
-        if form.is_valid():  # Comprueba si el formulario es válido
-            form.save()  # Guarda los cambios en el perfil del usuario
-            messages.success(request, 'Tu perfil ha sido actualizado con éxito.')  # Muestra un mensaje de éxito
-            return redirect('perfil')  # Redirige a la página del perfil
+    if request.method == 'POST':
+        # Si el método de la solicitud es POST, crea un formulario de actualización con los datos enviados
+        form = UserUpdateForm(request.POST, instance=request.user)
+        if form.is_valid():
+            # Si el formulario es válido, guarda los cambios en el usuario
+            form.save()
+            messages.success(request, 'Tu perfil ha sido actualizado con éxito.')
+            return redirect('perfil')
         else:
-            messages.error(request, 'Error al actualizar el perfil. Por favor, corrige los errores.')  # Muestra un mensaje de error
+            messages.error(request, 'Error al actualizar el perfil. Por favor, corrige los errores.')
     else:
-        form = UserUpdateForm(instance=request.user)  # Crea una instancia del formulario con el usuario actual
-    return render(request, 'cuentas/actualizar_perfil.html', {'form': form})  # Renderiza la plantilla actualizar_perfil.html con el formulario
+        # Si el método de la solicitud no es POST, muestra un formulario con los datos del usuario
+        form = UserUpdateForm(instance=request.user)
+    # Renderiza la plantilla 'actualizar_perfil.html' con el formulario de actualización
+    return render(request, 'cuentas/actualizar_perfil.html', {'form': form})
 
 # Vista para eliminar la cuenta del usuario
-@login_required  # Requiere que el usuario esté autenticado
+@login_required
 def eliminar_cuenta(request):
-    if request.method == 'POST':  # Comprueba si la solicitud es POST
-        user = request.user  # Obtiene el usuario actual
-        user.delete()  # Elimina el usuario
-        messages.success(request, 'Tu cuenta ha sido eliminada con éxito.')  # Muestra un mensaje de éxito
-        return redirect('index')  # Redirige a la página principal
-    return render(request, 'cuentas/eliminar_cuenta.html')  # Renderiza la plantilla eliminar_cuenta.html
+    if request.method == 'POST':
+        # Si el método de la solicitud es POST, elimina la cuenta del usuario
+        user = request.user
+        user.delete()
+        messages.success(request, 'Tu cuenta ha sido eliminada con éxito.')
+        return redirect('index')
+    # Renderiza la plantilla 'eliminar_cuenta.html' para confirmar la eliminación
+    return render(request, 'cuentas/eliminar_cuenta.html')
 
 # Vista para cerrar sesión
 def custom_logout_view(request):
-    logout(request)  # Cierra la sesión del usuario
-    return redirect('login')  # Redirige a la página de inicio de sesión
+    # Cierra la sesión del usuario y redirige a la página de inicio de sesión
+    logout(request)
+    return redirect('login')
+
+# Vista para manejar mensajes de contacto
+@csrf_exempt
+def contacto(request):
+    if request.method == 'POST':
+        # Si el método de la solicitud es POST, crea un formulario de contacto con los datos enviados
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            # Si el formulario es válido, guarda el mensaje de contacto
+            form.save()
+            return JsonResponse({'message': 'success'})
+        else:
+            return JsonResponse({'message': 'error', 'errors': form.errors})
+    else:
+        # Si el método de la solicitud no es POST, muestra un formulario vacío
+        form = ContactForm()
+    # Renderiza la plantilla 'contacto.html' con el formulario de contacto
+    return render(request, 'cuentas/contacto.html', {'form': form})
+
+# Vista para listar mensajes de contacto
+@login_required
+def listar_mensajes_contacto(request):
+    # Obtiene todos los mensajes de contacto
+    mensajes = MensajeContacto.objects.all()
+    # Renderiza la plantilla 'listar_mensajes_contacto.html' con los mensajes
+    return render(request, 'cuentas/listar_mensajes_contacto.html', {'mensajes': mensajes})
+
+# Vista para eliminar mensaje de contacto
+@login_required
+def eliminar_mensaje_contacto(request, mensaje_id):
+    # Obtiene el mensaje de contacto correspondiente al ID
+    mensaje = get_object_or_404(MensajeContacto, id=mensaje_id)
+    if request.method == "POST":
+        # Si el método de la solicitud es POST, elimina el mensaje
+        mensaje.delete()
+        messages.success(request, 'Mensaje de contacto eliminado con éxito.')
+    return redirect('listar_mensajes_contacto')
+
+@login_required
+def listar_categorias(request):
+    # Obtiene todas las categorías
+    categorias = Categoria.objects.all()
+    # Renderiza la plantilla 'listar_categorias.html' con las categorías
+    return render(request, 'cuentas/listar_categorias.html', {'categorias': categorias})
+
+@login_required
+def crear_categoria(request):
+    if request.method == 'POST':
+        # Si el método de la solicitud es POST, crea un formulario de categoría con los datos enviados
+        form = CategoriaForm(request.POST)
+        if form.is_valid():
+            # Si el formulario es válido, guarda la nueva categoría
+            form.save()
+            messages.success(request, 'Categoría creada con éxito.')
+            return redirect('listar_categorias')
+        else:
+            messages.error(request, 'Error al crear la categoría. Por favor, corrige los errores.')
+    else:
+        # Si el método de la solicitud no es POST, muestra un formulario vacío
+        form = CategoriaForm()
+    # Renderiza la plantilla 'crear_categoria.html' con el formulario de categoría
+    return render(request, 'cuentas/crear_categoria.html', {'form': form})
+
+@login_required
+def editar_categoria(request, categoria_id):
+    # Obtiene la categoría correspondiente al ID
+    categoria = get_object_or_404(Categoria, id=categoria_id)
+    if request.method == 'POST':
+        # Si el método de la solicitud es POST, crea un formulario de categoría con los datos enviados
+        form = CategoriaForm(request.POST, instance=categoria)
+        if form.is_valid():
+            # Si el formulario es válido, guarda los cambios en la categoría
+            form.save()
+            messages.success(request, '¡Categoría actualizada exitosamente!')
+            return redirect('listar_categorias')
+    else:
+        # Si el método de la solicitud no es POST, muestra un formulario con los datos de la categoría
+        form = CategoriaForm(instance=categoria)
+    # Renderiza la plantilla 'editar_categoria.html' con el formulario de categoría
+    return render(request, 'cuentas/editar_categoria.html', {'form': form})
+
+@login_required
+def eliminar_categoria(request, categoria_id):
+    # Obtiene la categoría correspondiente al ID
+    categoria = get_object_or_404(Categoria, id=categoria_id)
+    # Elimina la categoría
+    categoria.delete()
+    messages.success(request, '¡Categoría eliminada exitosamente!')
+    return redirect('listar_categorias')
+
+@login_required
+def tienda(request):
+    # Obtiene todos los productos
+    productos = Producto.objects.all()
+    # Renderiza la plantilla 'tienda.html' con los productos
+    return render(request, 'cuentas/tienda.html', {'productos': productos})
+
+@login_required
+def ver_carrito(request):
+    # Obtiene o crea un carrito para el usuario actual
+    carrito, created = Carrito.objects.get_or_create(usuario=request.user)
+    # Renderiza la plantilla 'ver_carrito.html' con el carrito
+    return render(request, 'cuentas/ver_carrito.html', {'carrito': carrito})
+
+@login_required
+def agregar_al_carrito(request, producto_id):
+    # Obtiene el producto correspondiente al ID
+    producto = get_object_or_404(Producto, id=producto_id)
+    # Obtiene o crea un carrito para el usuario actual
+    carrito, created = Carrito.objects.get_or_create(usuario=request.user)
+    # Obtiene la cantidad de producto a agregar
+    cantidad = int(request.POST.get('cantidad', 1))
+    # Obtiene o crea un ítem de producto en el carrito
+    item, created = ProductoItem.objects.get_or_create(carrito=carrito, producto=producto)
+    # Incrementa la cantidad del ítem
+    item.cantidad += cantidad
+    # Guarda el ítem
+    item.save()
+    messages.success(request, 'Producto agregado al carrito con éxito.')
+    return redirect('ver_carrito')
+
+@login_required
+def validar_pedido(request):
+    # Obtiene o crea un carrito para el usuario actual
+    carrito, created = Carrito.objects.get_or_create(usuario=request.user)
+    if request.method == 'POST':
+        # Crea un pedido para cada ítem en el carrito
+        for item in carrito.items.all():
+            Pedido.objects.create(usuario=request.user, producto=item.producto, cantidad=item.cantidad)
+        # Vacía el carrito después de realizar el pedido
+        carrito.items.all().delete()
+        messages.success(request, 'Pedido realizado con éxito.')
+        return redirect('ver_pedidos')
+    return redirect('carrito')
+
+@login_required
+def ver_pedidos(request):
+    # Obtiene todos los pedidos del usuario actual, ordenados por fecha de pedido descendente
+    pedidos = Pedido.objects.filter(usuario=request.user).order_by('-fecha_pedido')
+    # Renderiza la plantilla 'ver_pedidos.html' con los pedidos
+    return render(request, 'cuentas/ver_pedidos.html', {'pedidos': pedidos})
+
+@login_required
+def actualizar_carrito(request, item_id):
+    # Obtiene el ítem de producto correspondiente al ID
+    item = get_object_or_404(ProductoItem, id=item_id)
+    if request.method == 'POST':
+        # Si el método de la solicitud es POST, crea un formulario de ítem de producto con los datos enviados
+        form = ProductoItemForm(request.POST, instance=item)
+        if form.is_valid():
+            # Si el formulario es válido, guarda los cambios en el ítem
+            form.save()
+            messages.success(request, 'Cantidad actualizada con éxito.')
+            return redirect('ver_carrito')
+    else:
+        # Si el método de la solicitud no es POST, muestra un formulario con los datos del ítem
+        form = ProductoItemForm(instance=item)
+    # Renderiza la plantilla 'actualizar_carrito.html' con el formulario de ítem de producto
+    return render(request, 'cuentas/actualizar_carrito.html', {'form': form})
+
+@login_required
+def eliminar_del_carrito(request, item_id):
+    # Obtiene el ítem de producto correspondiente al ID
+    item = get_object_or_404(ProductoItem, id=item_id)
+    # Elimina el ítem del carrito
+    item.delete()
+    messages.success(request, 'Producto eliminado del carrito con éxito.')
+    return redirect('ver_carrito')
+
+@login_required
+def crear_producto(request):
+    if request.method == 'POST':
+        # Si el método de la solicitud es POST, crea un formulario de producto con los datos enviados
+        form = ProductoForm(request.POST, request.FILES)
+        if form.is_valid():
+            # Si el formulario es válido, guarda el nuevo producto
+            form.save()
+            messages.success(request, 'Producto creado con éxito.')
+            return redirect('tienda')
+        else:
+            messages.error(request, 'Error al crear el producto. Por favor, corrige los errores.')
+    else:
+        # Si el método de la solicitud no es POST, muestra un formulario vacío
+        form = ProductoForm()
+    # Renderiza la plantilla 'crear_producto.html' con el formulario de producto
+    return render(request, 'cuentas/crear_producto.html', {'form': form})
+
+@login_required
+def editar_producto(request, producto_id):
+    # Obtiene el producto correspondiente al ID
+    producto = get_object_or_404(Producto, id=producto_id)
+    if request.method == 'POST':
+        # Si el método de la solicitud es POST, crea un formulario de producto con los datos enviados
+        form = ProductoForm(request.POST, request.FILES, instance=producto)
+        if form.is_valid():
+            # Si el formulario es válido, guarda los cambios en el producto
+            form.save()
+            messages.success(request, 'Producto actualizado con éxito.')
+            return redirect('tienda')
+        else:
+            messages.error(request, 'Error al actualizar el producto. Por favor, corrige los errores.')
+    else:
+        # Si el método de la solicitud no es POST, muestra un formulario con los datos del producto
+        form = ProductoForm(instance=producto)
+    # Renderiza la plantilla 'editar_producto.html' con el formulario de producto
+    return render(request, 'cuentas/editar_producto.html', {'form': form})
+
+@login_required
+def eliminar_producto(request, producto_id):
+    # Obtiene el producto correspondiente al ID
+    producto = get_object_or_404(Producto, id=producto_id)
+    if request.method == 'POST':
+        # Si el método de la solicitud es POST, elimina el producto
+        producto.delete()
+        messages.success(request, 'Producto eliminado con éxito.')
+        return redirect('tienda')
+    # Renderiza la plantilla 'confirmar_eliminar.html' para confirmar la eliminación
+    return render(request, 'cuentas/confirmar_eliminar.html', {'producto': producto})

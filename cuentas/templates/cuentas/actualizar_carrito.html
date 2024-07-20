@@ -1,0 +1,15 @@
+{% extends "cuentas/base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Actualizar Carrito</h2>
+    {% if perms.cuentas.change_carrito %}
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-orange">Actualizar</button>
+        </form>
+    {% else %}
+        <p>No tienes permiso para actualizar el carrito.</p>
+    {% endif %}
+</div>
+{% endblock %}

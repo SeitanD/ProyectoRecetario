@@ -1,0 +1,47 @@
+{% extends "cuentas/base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Carrito de Compras</h2>
+    {% if carrito.items.all %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Imagen</th>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in carrito.items.all %}
+            <tr>
+                <td><img src="{{ item.producto.imagen.url }}" alt="{{ item.producto.nombre }}" style="width: 50px;"></td>
+                <td>{{ item.producto.nombre }}</td>
+                <td>{{ item.cantidad }}</td>
+                <td>
+                    {% if perms.cuentas.change_carrito %}
+                    <form method="post" action="{% url 'actualizar_carrito' item.id %}" style="display:inline-block;">
+                        {% csrf_token %}
+                        <input type="number" name="cantidad" value="{{ item.cantidad }}" min="1" class="form-control d-inline-block w-auto">
+                        <button type="submit" class="btn btn-orange">Actualizar</button>
+                    </form>
+                    {% endif %}
+                    {% if perms.cuentas.delete_carrito %}
+                    <form method="post" action="{% url 'eliminar_del_carrito' item.id %}" style="display:inline-block;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'validar_pedido' %}" class="btn btn-orange">Validar Pedido</a>
+    <a href="{% url 'tienda' %}" class="btn btn-orange">Seguir comprando</a>
+    {% else %}
+    <p>Tu carrito está vacío.</p>
+    <a href="{% url 'tienda' %}" class="btn btn-orange">Volver a la tienda</a>
+    {% endif %}
+</div>
+{% endblock %}

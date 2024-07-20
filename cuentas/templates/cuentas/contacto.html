@@ -1,86 +1,127 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    {% load static %}
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Q'RICO - Contacto</title>
-    <!-- Inclusión de la biblioteca de iconos Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <!-- Enlace al archivo de estilos CSS personalizado -->
-    <link rel="stylesheet" href="{% static 'cuentas/css/contacto-estilo.css' %}"
-</head>
-<body>
-    <!-- SECCION CONTACTO -->
-    <section id="contacto">
-        <!-- Encabezado con el logo -->
-        <header>
-            <div class="contenido-header">
-                <!-- Enlace al index a través del logo -->
-                <a href="{% url 'index' %}" class="logo" id="logo">
-                    <h1>Q'RICO</h1>
-                </a>
-            </div>
-        </header>
-        <!-- Formulario de contacto -->
-        <div class="formulario">
-            <!-- Título del formulario -->
-            <h2>Contacto</h2>
-            <!-- Formulario con campos de contacto -->
-            <form id="form-contacto">
-                <!-- Campo para el nombre -->
-                <div class="campo">
-                    <!-- Icono de usuario -->
-                    <i class="fa-solid fa-user"></i>
-                    <!-- Input para el nombre -->
-                    <input type="text" id="nombre" name="nombre" placeholder="Nombre" required>
-                </div>
-                <!-- Campo para el correo electrónico -->
-                <div class="campo">
-                    <!-- Icono de correo -->
-                    <i class="fa-solid fa-envelope"></i>
-                    <!-- Input para el correo electrónico -->
-                    <input type="email" id="email" name="email" placeholder="Correo electrónico" required>
-                </div>
-                <!-- Campo para el teléfono -->
-                <div class="campo">
-                    <!-- Icono de teléfono -->
-                    <i class="fa-solid fa-phone"></i>
-                    <!-- Input para el teléfono -->
-                    <input type="tel" id="telefono" name="telefono" placeholder="Teléfono" required>
-                </div>
-                <!-- Campo para el asunto -->
-                <div class="campo">
-                    <!-- Icono de asunto -->
-                    <i class="fa-solid fa-tag"></i>
-                    <!-- Input para el asunto -->
-                    <input type="text" id="asunto" name="asunto" placeholder="Asunto" required>
-                </div>
-                <!-- Campo para el mensaje -->
-                <div class="campo">
-                    <!-- Icono de mensaje -->
-                    <i class="fa-solid fa-comments"></i>
-                    <!-- Textarea para el mensaje -->
-                    <textarea id="mensaje" name="mensaje" rows="4" placeholder="Mensaje" required></textarea>
-                </div>
-                <!-- Botón para enviar el formulario -->
-                <button type="submit">Enviar mensaje</button>
-            </form>
-            <!-- Párrafo para mostrar mensajes de error o información -->
-            <p id="respuesta"></p>
-        </div>
-    </section>
+{% extends "cuentas/base.html" %}
 
-    <!-- Modal de confirmación -->
-    <div id="modal-confirmacion" class="modal">
-        <div class="modal-contenido">
-            <p>Mensaje enviado con éxito</p>
-            <button id="cerrar-modal">Aceptar</button>
+{% block title %}Contacto - Q'RICO{% endblock %}
+
+{% block content %}
+<section id="inicio">
+    <div class="container mt-5">
+        <div class="formulario">
+            <h2 class="text-center">Contacto</h2>
+            <form id="form-contacto" class="mx-auto" style="max-width: 600px;">
+                {% csrf_token %}
+                <div class="campo">
+                    <label for="nombre">Nombre</label>
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" id="nombre" name="nombre" placeholder="Nombre" class="form-control" required>
+                </div>
+                <div class="campo">
+                    <label for="email">Correo electrónico</label>
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="email" id="email" name="email" placeholder="Correo electrónico" class="form-control" required>
+                </div>
+                <div class="campo">
+                    <label for="telefono">Teléfono</label>
+                    <i class="fa-solid fa-phone"></i>
+                    <input type="tel" id="telefono" name="telefono" placeholder="Teléfono" class="form-control" required>
+                </div>
+                <div class="campo">
+                    <label for="asunto">Asunto</label>
+                    <i class="fa-solid fa-tag"></i>
+                    <input type="text" id="asunto" name="asunto" placeholder="Asunto" class="form-control" required>
+                </div>
+                <div class="campo">
+                    <label for="mensaje">Mensaje</label>
+                    <i class="fa-solid fa-comments"></i>
+                    <textarea id="mensaje" name="mensaje" rows="4" placeholder="Mensaje" class="form-control" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-orange mt-3">Enviar mensaje</button>
+            </form>
+            <p id="respuesta" class="mt-3 text-center"></p>
         </div>
     </div>
+</section>
 
-    <!-- Script para manejar la lógica del formulario -->
-    <script src="{% static 'cuentas/js/contacto-script.js' %}"></script>
-</body>
-</html>
+<!-- Modal -->
+<div id="modal-confirmacion" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmación</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Mensaje enviado con éxito</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="cerrar-modal" class="btn btn-orange" data-dismiss="modal">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#form-contacto').on('submit', function(e) {
+            e.preventDefault();
+
+            const nombre = $('#nombre').val();
+            const email = $('#email').val();
+            const telefono = $('#telefono').val();
+            const asunto = $('#asunto').val();
+            const mensaje = $('#mensaje').val();
+            const csrfToken = $('[name="csrfmiddlewaretoken"]').val();
+
+            const nombreRegex = /^[a-zA-Z\s]+$/;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const telefonoRegex = /^\d{9}$/;
+
+            if (!nombreRegex.test(nombre)) {
+                $('#respuesta').text('Por favor, ingresa un nombre válido (solo letras y espacios)');
+            } else if (!emailRegex.test(email)) {
+                $('#respuesta').text('Por favor, ingresa un correo electrónico válido');
+            } else if (!telefonoRegex.test(telefono)) {
+                $('#respuesta').text('Por favor, ingresa un número de teléfono válido (exactamente 9 dígitos)');
+            } else if (asunto.trim() === '') {
+                $('#respuesta').text('Por favor, ingresa el asunto');
+            } else if (mensaje.trim() === '') {
+                $('#respuesta').text('Por favor, ingresa tu mensaje');
+            } else {
+                $.ajax({
+                    url: "{% url 'contacto' %}",
+                    type: 'POST',
+                    data: {
+                        nombre: nombre,
+                        email: email,
+                        telefono: telefono,
+                        asunto: asunto,
+                        mensaje: mensaje,
+                        csrfmiddlewaretoken: csrfToken
+                    },
+                    success: function(response) {
+                        if (response.message === 'success') {
+                            $('#modal-confirmacion .modal-body').text('Mensaje enviado con éxito');
+                            $('#modal-confirmacion').modal('show');
+                            $('#respuesta').text('');
+                            $('#form-contacto')[0].reset();
+                        } else {
+                            $('#modal-confirmacion .modal-body').text('Hubo un error al enviar el mensaje.');
+                            $('#modal-confirmacion').modal('show');
+                        }
+                    },
+                    error: function() {
+                        $('#modal-confirmacion .modal-body').text('Hubo un error al enviar el mensaje.');
+                        $('#modal-confirmacion').modal('show');
+                    }
+                });
+            }
+        });
+
+        $('#cerrar-modal').on('click', function() {
+            $('#modal-confirmacion').modal('hide');
+            window.location.href = "{% url 'index' %}";
+        });
+    });
+</script>
+{% endblock %}

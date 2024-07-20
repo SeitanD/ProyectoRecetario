@@ -1,26 +1,88 @@
-from django.contrib import admin  # Importa el módulo de administración de Django
-from .models import Receta, Comentario, Profile  # Importa los modelos Receta, Comentario y Profile del archivo models.py
+from django.contrib import admin
+from .models import Receta, Comentario, Profile, Valoracion, MensajeContacto, Categoria, Producto, Carrito, ProductoItem
 
-@admin.register(Receta)  # Registra el modelo Receta en el sitio de administración usando un decorador
-class RecetaAdmin(admin.ModelAdmin):  # Define una clase para personalizar la administración del modelo Receta
-    list_display = ('titulo', 'autor', 'fecha_creacion')  # Muestra las columnas 'titulo', 'autor' y 'fecha_creacion' en la lista de recetas
-    search_fields = ('titulo', 'autor__username')  # Permite buscar recetas por 'titulo' y el 'username' del autor
-    list_filter = ('fecha_creacion',)  # Añade un filtro lateral para filtrar recetas por 'fecha_creacion'
+# Configuración del modelo Receta para el administrador
+@admin.register(Receta)
+class RecetaAdmin(admin.ModelAdmin):
+    # Campos a mostrar en la lista de recetas
+    list_display = ('titulo', 'autor', 'fecha_creacion')
+    # Campos por los que se puede buscar en el administrador
+    search_fields = ('titulo', 'autor__username')
+    # Filtros disponibles para la lista de recetas
+    list_filter = ('fecha_creacion',)
 
-@admin.register(Comentario)  # Registra el modelo Comentario en el sitio de administración usando un decorador
-class ComentarioAdmin(admin.ModelAdmin):  # Define una clase para personalizar la administración del modelo Comentario
-    list_display = ('receta', 'autor', 'fecha_creacion')  # Muestra las columnas 'receta', 'autor' y 'fecha_creacion' en la lista de comentarios
-    search_fields = ('autor__username', 'receta__titulo')  # Permite buscar comentarios por el 'username' del autor y el 'titulo' de la receta
-    list_filter = ('fecha_creacion',)  # Añade un filtro lateral para filtrar comentarios por 'fecha_creacion'
+# Configuración del modelo Comentario para el administrador
+@admin.register(Comentario)
+class ComentarioAdmin(admin.ModelAdmin):
+    # Campos a mostrar en la lista de comentarios
+    list_display = ('receta', 'autor', 'fecha_creacion')
+    # Campos por los que se puede buscar en el administrador
+    search_fields = ('autor__username', 'receta__titulo')
+    # Filtros disponibles para la lista de comentarios
+    list_filter = ('fecha_creacion',)
 
-@admin.register(Profile)  # Registra el modelo Profile en el sitio de administración usando un decorador
-class ProfileAdmin(admin.ModelAdmin):  # Define una clase para personalizar la administración del modelo Profile
-    list_display = ('user',)  # Muestra la columna 'user' en la lista de perfiles
-    search_fields = ('user__username',)  # Permite buscar perfiles por el 'username' del usuario
-    filter_horizontal = ('favoritos',)  # Configura un selector horizontal para el campo 'favoritos' en el modelo Profile
+# Configuración del modelo Profile para el administrador
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    # Campo a mostrar en la lista de perfiles
+    list_display = ('user',)
+    # Campos por los que se puede buscar en el administrador
+    search_fields = ('user__username',)
+    # Habilitar selección múltiple de recetas favoritas
+    filter_horizontal = ('favoritos',)
 
-# Eliminar los registros duplicados
-# admin.site.register(Receta)  # Registro directo del modelo Receta (comentado para evitar duplicados)
-# admin.site.register(Comentario)  # Registro directo del modelo Comentario (comentado para evitar duplicados)
-# admin.site.register(Profile)  # Registro directo del modelo Profile (comentado para evitar duplicados)
+# Configuración del modelo Valoracion para el administrador
+@admin.register(Valoracion)
+class ValoracionAdmin(admin.ModelAdmin):
+    # Campos a mostrar en la lista de valoraciones
+    list_display = ('receta', 'usuario', 'puntuacion', 'fecha')
+    # Campos por los que se puede buscar en el administrador
+    search_fields = ('usuario__username', 'receta__titulo')
+    # Filtros disponibles para la lista de valoraciones
+    list_filter = ('fecha', 'puntuacion')
 
+# Configuración del modelo MensajeContacto para el administrador
+@admin.register(MensajeContacto)
+class MensajeContactoAdmin(admin.ModelAdmin):
+    # Campos a mostrar en la lista de mensajes de contacto
+    list_display = ('nombre', 'email', 'asunto', 'fecha')
+    # Campos por los que se puede buscar en el administrador
+    search_fields = ('nombre', 'email', 'asunto')
+    # Filtros disponibles para la lista de mensajes de contacto
+    list_filter = ('fecha',)
+
+# Configuración del modelo Categoria para el administrador
+@admin.register(Categoria)
+class CategoriaAdmin(admin.ModelAdmin):
+    # Campo a mostrar en la lista de categorías
+    list_display = ('nombre',)
+    # Campo por el que se puede buscar en el administrador
+    search_fields = ('nombre',)
+
+# Configuración del modelo Producto para el administrador
+@admin.register(Producto)
+class ProductoAdmin(admin.ModelAdmin):
+    # Campos a mostrar en la lista de productos
+    list_display = ('nombre', 'precio', 'fecha_creacion')
+    # Campos por los que se puede buscar en el administrador
+    search_fields = ('nombre',)
+    # Filtros disponibles para la lista de productos
+    list_filter = ('fecha_creacion',)
+
+# Configuración del modelo Carrito para el administrador
+@admin.register(Carrito)
+class CarritoAdmin(admin.ModelAdmin):
+    # Campos a mostrar en la lista de carritos
+    list_display = ('usuario', 'creado_en')
+    # Campos por los que se puede buscar en el administrador
+    search_fields = ('usuario__username',)
+    # Filtros disponibles para la lista de carritos
+    list_filter = ('creado_en',)
+
+# Configuración del modelo ProductoItem para el administrador
+@admin.register(ProductoItem)
+class ProductoItemAdmin(admin.ModelAdmin):
+    # Campos a mostrar en la lista de ítems de producto
+    list_display = ('carrito', 'producto', 'cantidad')
+    # Campos por los que se puede buscar en el administrador
+    search_fields = ('carrito__usuario__username', 'producto__nombre')
