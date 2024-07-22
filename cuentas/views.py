@@ -1,4 +1,4 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -58,6 +58,7 @@ def registro(request):
     # Renderiza la plantilla 'registro.html' con el formulario de registro
     return render(request, 'cuentas/registro.html', {'form': form})
 
+# Vista para el blog
 def blog(request):
     categoria_id = request.GET.get('categoria')
     if categoria_id:
@@ -124,6 +125,7 @@ def add_comment(request, receta_id):
             messages.error(request, 'Error al agregar el comentario. Por favor, corrige los errores.')
     return redirect('blog')
 
+# Vista para agregar valoración (requiere autenticación)
 @login_required
 def add_rating(request, receta_id):
     # Obtiene la receta correspondiente al ID
@@ -146,16 +148,15 @@ def add_rating(request, receta_id):
             receta.valoracion = nueva_valoracion
             receta.total_valoraciones = total_valoraciones
             receta.save()
-            # Devuelve la nueva valoración promedio y el total de valoraciones como JSON
-            return JsonResponse({
-                'new_rating': nueva_valoracion,
-                'total_ratings': total_valoraciones
-            })
+            messages.success(request, '¡Valoración añadida con éxito!')
+            # Redirige al blog
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
-            return JsonResponse({'error': 'Formulario no válido'}, status=400)
+            messages.error(request, 'Error al valorar la receta. Por favor, corrige los errores.')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     return JsonResponse({'error': 'Método no permitido'}, status=405)
 
-# Vista para listar valoraciones de una receta
+# Vista para listar valoraciones de una receta (requiere autenticación)
 @login_required
 def listar_valoraciones(request, receta_id):
     # Obtiene la receta correspondiente al ID
@@ -165,7 +166,7 @@ def listar_valoraciones(request, receta_id):
     # Renderiza la plantilla 'listar_valoraciones.html' con las valoraciones
     return render(request, 'cuentas/listar_valoraciones.html', {'receta': receta, 'valoraciones': valoraciones})
 
-# Vista para eliminar una valoración
+# Vista para eliminar una valoración (requiere autenticación)
 @login_required
 def eliminar_valoracion(request, valoracion_id):
     # Obtiene la valoración correspondiente al ID
@@ -178,7 +179,7 @@ def eliminar_valoracion(request, valoracion_id):
         messages.error(request, 'No tienes permiso para eliminar esta valoración.')
     return redirect('blog')
 
-# Vista para eliminar una receta
+# Vista para eliminar una receta (requiere autenticación)
 @login_required
 def eliminar_receta(request, receta_id):
     # Obtiene la receta correspondiente al ID
@@ -189,7 +190,7 @@ def eliminar_receta(request, receta_id):
         messages.success(request, 'Receta eliminada con éxito.')
     return redirect('blog')
 
-# Vista para eliminar un comentario
+# Vista para eliminar un comentario (requiere autenticación)
 @login_required
 def eliminar_comentario(request, comentario_id):
     # Obtiene el comentario correspondiente al ID
@@ -200,7 +201,7 @@ def eliminar_comentario(request, comentario_id):
         messages.success(request, 'Comentario eliminado con éxito.')
     return redirect('blog')
 
-# Vista para agregar una receta a los favoritos
+# Vista para agregar una receta a los favoritos (requiere autenticación)
 @login_required
 def add_to_favorites(request, receta_id):
     # Obtiene la receta correspondiente al ID
@@ -214,7 +215,7 @@ def add_to_favorites(request, receta_id):
         messages.info(request, 'Esta receta ya está en tus favoritos.')
     return redirect('blog')
 
-# Vista para eliminar una receta de los favoritos
+# Vista para eliminar una receta de los favoritos (requiere autenticación)
 @login_required
 def eliminar_favorito(request, receta_id):
     # Obtiene la receta correspondiente al ID
@@ -224,7 +225,7 @@ def eliminar_favorito(request, receta_id):
     messages.success(request, 'Receta eliminada de tus favoritos.')
     return redirect('perfil')
 
-# Vista para mostrar el perfil del usuario
+# Vista para mostrar el perfil del usuario (requiere autenticación)
 @login_required
 def perfil(request):
     profile = request.user.profile
@@ -233,7 +234,7 @@ def perfil(request):
     # Renderiza la plantilla 'perfil.html' con la información del perfil y las recetas favoritas
     return render(request, 'cuentas/perfil.html', {'user': request.user, 'recetas_favoritas': recetas_favoritas})
 
-# Vista para editar una receta
+# Vista para editar una receta (requiere autenticación)
 @login_required
 def editar_receta(request, receta_id):
     # Obtiene la receta correspondiente al ID
@@ -257,7 +258,7 @@ def editar_receta(request, receta_id):
     # Renderiza la plantilla 'editar_receta.html' con el formulario de receta
     return render(request, 'cuentas/editar_receta.html', {'form': form})
 
-# Vista para editar un comentario
+# Vista para editar un comentario (requiere autenticación)
 @login_required
 def editar_comentario(request, comentario_id):
     # Obtiene el comentario correspondiente al ID
@@ -281,7 +282,7 @@ def editar_comentario(request, comentario_id):
     # Renderiza la plantilla 'editar_comentario.html' con el formulario de comentario
     return render(request, 'cuentas/editar_comentario.html', {'form': form})
 
-# Vista para actualizar el perfil del usuario
+# Vista para actualizar el perfil del usuario (requiere autenticación)
 @login_required
 def actualizar_perfil(request):
     if request.method == 'POST':
@@ -300,7 +301,7 @@ def actualizar_perfil(request):
     # Renderiza la plantilla 'actualizar_perfil.html' con el formulario de actualización
     return render(request, 'cuentas/actualizar_perfil.html', {'form': form})
 
-# Vista para eliminar la cuenta del usuario
+# Vista para eliminar la cuenta del usuario (requiere autenticación)
 @login_required
 def eliminar_cuenta(request):
     if request.method == 'POST':
@@ -318,7 +319,7 @@ def custom_logout_view(request):
     logout(request)
     return redirect('login')
 
-# Vista para manejar mensajes de contacto
+# Vista para manejar mensajes de contacto (exenta de CSRF)
 @csrf_exempt
 def contacto(request):
     if request.method == 'POST':
@@ -336,7 +337,7 @@ def contacto(request):
     # Renderiza la plantilla 'contacto.html' con el formulario de contacto
     return render(request, 'cuentas/contacto.html', {'form': form})
 
-# Vista para listar mensajes de contacto
+# Vista para listar mensajes de contacto (requiere autenticación)
 @login_required
 def listar_mensajes_contacto(request):
     # Obtiene todos los mensajes de contacto
@@ -344,7 +345,7 @@ def listar_mensajes_contacto(request):
     # Renderiza la plantilla 'listar_mensajes_contacto.html' con los mensajes
     return render(request, 'cuentas/listar_mensajes_contacto.html', {'mensajes': mensajes})
 
-# Vista para eliminar mensaje de contacto
+# Vista para eliminar mensaje de contacto (requiere autenticación)
 @login_required
 def eliminar_mensaje_contacto(request, mensaje_id):
     # Obtiene el mensaje de contacto correspondiente al ID
@@ -355,6 +356,7 @@ def eliminar_mensaje_contacto(request, mensaje_id):
         messages.success(request, 'Mensaje de contacto eliminado con éxito.')
     return redirect('listar_mensajes_contacto')
 
+# Vista para listar categorías (requiere autenticación)
 @login_required
 def listar_categorias(request):
     # Obtiene todas las categorías
@@ -362,6 +364,7 @@ def listar_categorias(request):
     # Renderiza la plantilla 'listar_categorias.html' con las categorías
     return render(request, 'cuentas/listar_categorias.html', {'categorias': categorias})
 
+# Vista para crear una categoría (requiere autenticación)
 @login_required
 def crear_categoria(request):
     if request.method == 'POST':
@@ -380,6 +383,7 @@ def crear_categoria(request):
     # Renderiza la plantilla 'crear_categoria.html' con el formulario de categoría
     return render(request, 'cuentas/crear_categoria.html', {'form': form})
 
+# Vista para editar una categoría (requiere autenticación)
 @login_required
 def editar_categoria(request, categoria_id):
     # Obtiene la categoría correspondiente al ID
@@ -398,6 +402,7 @@ def editar_categoria(request, categoria_id):
     # Renderiza la plantilla 'editar_categoria.html' con el formulario de categoría
     return render(request, 'cuentas/editar_categoria.html', {'form': form})
 
+# Vista para eliminar una categoría (requiere autenticación)
 @login_required
 def eliminar_categoria(request, categoria_id):
     # Obtiene la categoría correspondiente al ID
@@ -407,6 +412,7 @@ def eliminar_categoria(request, categoria_id):
     messages.success(request, '¡Categoría eliminada exitosamente!')
     return redirect('listar_categorias')
 
+# Vista para la tienda (requiere autenticación)
 @login_required
 def tienda(request):
     # Obtiene todos los productos
@@ -414,6 +420,7 @@ def tienda(request):
     # Renderiza la plantilla 'tienda.html' con los productos
     return render(request, 'cuentas/tienda.html', {'productos': productos})
 
+# Vista para ver el carrito (requiere autenticación)
 @login_required
 def ver_carrito(request):
     # Obtiene o crea un carrito para el usuario actual
@@ -421,6 +428,7 @@ def ver_carrito(request):
     # Renderiza la plantilla 'ver_carrito.html' con el carrito
     return render(request, 'cuentas/ver_carrito.html', {'carrito': carrito})
 
+# Vista para agregar un producto al carrito (requiere autenticación)
 @login_required
 def agregar_al_carrito(request, producto_id):
     # Obtiene el producto correspondiente al ID
@@ -438,6 +446,7 @@ def agregar_al_carrito(request, producto_id):
     messages.success(request, 'Producto agregado al carrito con éxito.')
     return redirect('ver_carrito')
 
+# Vista para validar el pedido (requiere autenticación)
 @login_required
 def validar_pedido(request):
     # Obtiene o crea un carrito para el usuario actual
@@ -452,6 +461,7 @@ def validar_pedido(request):
         return redirect('ver_pedidos')
     return redirect('carrito')
 
+# Vista para ver los pedidos (requiere autenticación)
 @login_required
 def ver_pedidos(request):
     # Obtiene todos los pedidos del usuario actual, ordenados por fecha de pedido descendente
@@ -459,6 +469,7 @@ def ver_pedidos(request):
     # Renderiza la plantilla 'ver_pedidos.html' con los pedidos
     return render(request, 'cuentas/ver_pedidos.html', {'pedidos': pedidos})
 
+# Vista para actualizar un ítem del carrito (requiere autenticación)
 @login_required
 def actualizar_carrito(request, item_id):
     # Obtiene el ítem de producto correspondiente al ID
@@ -477,6 +488,7 @@ def actualizar_carrito(request, item_id):
     # Renderiza la plantilla 'actualizar_carrito.html' con el formulario de ítem de producto
     return render(request, 'cuentas/actualizar_carrito.html', {'form': form})
 
+# Vista para eliminar un ítem del carrito (requiere autenticación)
 @login_required
 def eliminar_del_carrito(request, item_id):
     # Obtiene el ítem de producto correspondiente al ID
@@ -486,6 +498,7 @@ def eliminar_del_carrito(request, item_id):
     messages.success(request, 'Producto eliminado del carrito con éxito.')
     return redirect('ver_carrito')
 
+# Vista para crear un producto (requiere autenticación)
 @login_required
 def crear_producto(request):
     if request.method == 'POST':
@@ -504,6 +517,7 @@ def crear_producto(request):
     # Renderiza la plantilla 'crear_producto.html' con el formulario de producto
     return render(request, 'cuentas/crear_producto.html', {'form': form})
 
+# Vista para editar un producto (requiere autenticación)
 @login_required
 def editar_producto(request, producto_id):
     # Obtiene el producto correspondiente al ID
@@ -524,6 +538,7 @@ def editar_producto(request, producto_id):
     # Renderiza la plantilla 'editar_producto.html' con el formulario de producto
     return render(request, 'cuentas/editar_producto.html', {'form': form})
 
+# Vista para eliminar un producto (requiere autenticación)
 @login_required
 def eliminar_producto(request, producto_id):
     # Obtiene el producto correspondiente al ID
